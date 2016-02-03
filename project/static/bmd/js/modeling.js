@@ -1,3 +1,23 @@
+
+
+
+
+
+
+
+
+
+
+// Add 20 lines when report line number.
+
+
+
+
+
+
+
+
+
 $(document).ready(function () {
 
     //Tab changes
@@ -105,14 +125,17 @@ $(document).ready(function () {
 
         //BMD execution
         $('#BMDS_run').click(function(e){
+			
             e.preventDefault();
             // set run status
             $('#BMDS_runstatus').remove();
             var status = $('<div id="BMDS_runstatus"></div>')
-                            .append('<p>Running BMDS please wait... <img id="BMDS_runstatus" src="/static/img/loading.gif" /></p>');
+                            .append('<p>Running BMDS please wait... <img id="BMDS_runstatus" src="/static/img/loading.gif" /></p>');		// image for waiting.
+			
             $('#BMDS').append(status);
             var d = session.submit_settings();
             var args = JSON.stringify(d);
+			alert("url_run_model = "+ url_run_model + ", args = " + 'args');
             $.post(url_run_model, args, function(d) {
                 $('#selection_div').remove();
                 $('#BMDS_runstatus').remove();

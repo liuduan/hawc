@@ -1,3 +1,10 @@
+'''
+This is a very important file for the entire web site.
+All web page requests from a client are directed to this file,
+and then according to the requesting url pattern,
+the request will be re-directed to template files or other urls.py files.
+'''
+
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin

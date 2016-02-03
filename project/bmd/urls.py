@@ -1,3 +1,13 @@
+'''
+A subset of client web page requests are directed to here by
+.\project\hawc\urls.py, and then this file will re-directed the web requests
+to other views.py files.
+
+Usually template part is not directed to here, and
+only views.py part are directly to this file. The file views.py processes
+the variables and access databases.  
+
+'''
 from django.conf.urls import url, include
 
 from rest_framework.routers import DefaultRouter

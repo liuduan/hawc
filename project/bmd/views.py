@@ -1,3 +1,10 @@
+'''
+This file provides the views for the template .\project\templates\bmd\bmd_session_form.html.
+The views.py files usually provide variables and database access to the template.
+It may provide views to other templates too.
+'''
+
+
 from json import dumps, loads
 import logging
 
@@ -14,6 +21,12 @@ from utils.views import (BaseCreate, BaseUpdate, BaseDetail)
 from bmds.bmds import BMDS
 from . import forms
 from . import models
+
+# import pdb
+# pdb.set_trace() 
+
+
+
 
 
 class BMDRead(BaseDetail):
@@ -35,6 +48,7 @@ class BMDRead(BaseDetail):
         logics = models.LogicField.objects.filter(assessment=self.assessment)
         context['logics'] = models.LogicField.website_list_return(logics, self.object.endpoint.data_type, True)
         context['bmds_version'] = self.assessment.BMD_Settings.BMDS_version
+        # context['bmds_version'] = "85"
         return context
 
 
@@ -48,15 +62,21 @@ class BMDCreate(BaseCreate):
     success_message = 'BMD modeling session created.'
     parent_model = Endpoint
     parent_template_name = 'endpoint'
+    # global foo = 'foo' # LD added
     model = models.BMD_session
     form_class = forms.BMD_SessionForm
-
+    print "Hello world, within class BMDCreate ############################################"
+    print parent_template_name
+    # print "endpoint", endpoint
+    
+    
     def post(self, request, *args, **kwargs):
         model_settings = loads(request.body)  # json
         units = get_object_or_404(DoseUnits, pk=model_settings.get('dose_units_id'))
         logging.debug('saving new session')
         session = models.BMD_session(endpoint=self.parent,
                                      BMDS_version=self.assessment.BMD_Settings.BMDS_version,
+                                     # BMDS_version= 85,
                                      bmrs=dumps(model_settings.get('bmrs')),
                                      dose_units=units)
 
@@ -67,7 +87,7 @@ class BMDCreate(BaseCreate):
             output = session.webpage_return(json=True)
         except Exception as e:
             output = {'error': e.message}
-
+        print "within def post &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
         return HttpResponse(dumps(output), content_type="application/json")
 
     def get_context_data(self, **kwargs):
@@ -86,7 +106,16 @@ class BMDCreate(BaseCreate):
         logics = self.assessment.BMD_Logic_Fields.all()
         context['logics'] = models.LogicField.website_list_return(logics, self.parent.data_type, True)
         context['bmds_version'] = self.assessment.BMD_Settings.BMDS_version
+        context['bmds_version'] = 85
+        context['Test'] = 'Test'
+        context['name'] = 'foo'
+        print "Hello world, within def get_context_data #####################################################"
+        print dir(context)
+        print (context)
+
+        
         return context
+    # print endpoint
 
 
 class BMDVersions(BMDRead):

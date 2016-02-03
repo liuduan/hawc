@@ -1,9 +1,22 @@
+<!--
+The purpose of this file is to collect user input for BMDS.
+Data flow:
+After the data collected it was send to ./project/static/bmd/js/modeling.js.
+And modeling.js submitted with $.post.
+
+Some of the variables are provided by .\project\bmd\views.py
+-->
+
+
+
 {% extends 'portal.html' %}
 
 
 {% block title %}
   {{assessment}} | {{endpoint.study}} | {{endpoint}} | Edit BMD Modeling | HAWC
 {% endblock %}
+
+
 
 {% block breadcrumbs %}
   <li><a href="{% url 'assessment:detail' pk=assessment.pk %}">{{ assessment }}</a><span class="divider">/</span></li>
@@ -18,6 +31,8 @@
     <li class="active">BMD Modeling Create<span class="divider">/</span></li>
   {% endif %}
 {% endblock %}
+
+
 
 {% block content %}
 
@@ -126,9 +141,56 @@
         </div>
       </div>
 
+
+
+  <br>Here is from Python: {{Test}} 
+{{bmds_version}}
+
+
+<!-- RUN BMDS in remote server -->
+<form class="form-horizontal" name="Data-to-BMDS" action="http://52.24.231.219/BMDS_receivings.php" method="POST">
+          
+          <input type="hidden" name="Data-to-BMDS_post" value="LogLogistic
+BMDS_Model_Run
+test
+output.out
+5
+250 1e-08 1e-08 0 1 1 1 0 0
+0.1 0 0.95
+-9999 -9999 -9999
+0
+-9999 -9999 -9999
+Dose Incidence NEGATIVE_RESPONSE
+0.000000 0 20
+50.000000 0 20
+150.000000 3 17
+250.000000 6 14
+350.000000 6 14"/>
+   
+   
+   
+   
+   
+	
+   
+   
+   <button id="BMDS_run_diverge" class="btn btn-large btn-primary">Test Run BMDS</button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
       <!-- RUN BMDS -->
       <div id="BMDS" class="form-actions">
         <h3>Run BMDS</h3>
+        .
         <button id="BMDS_run" class="btn btn-large btn-primary">Run BMDS</button>
         <button id="BMDS_reset" class="btn btn-info" >Reset to default settings</button>
         <br><br>
@@ -300,14 +362,22 @@
 {% block extrajs %}
   <script src="{{STATIC_URL}}bmd/js/modeling_orm.js" type="text/javascript"></script>
   <script type="text/javascript">
+  
     var bmds_version = '{{bmds_version}}';
-    var endpoint = new Endpoint({{endpoint.d_response|safe}});
+    //var endpoint = new Endpoint({{endpoint.d_response|safe}});
+	alert ("Hello 3");
+	// alert("parent_template_name" + {{name}});
+	var endpoint = new Endpoint({{endpoint.d_response|safe}});		//LD modified
+	alert ("Hello 4"+ '{{endpoint.d_response|safe}}');
+	alert ("Hello 4.5: "+ '{{name}}');
     var bmd_ds_plot = new DRPlot(endpoint, '#bmd_ds_plot');
     var bmd_output_plot = new DRPlot(endpoint, '#bmd_output_plot');
     var raw_output_img = new DRPlot(endpoint, '#raw_output_img');
     var crud = '{{ crud }}';
+	alert ("Hello 5" + '{{ crud }}');
     var bmds_version = '{{bmds_version}}';
     var csrf_token = "{% csrf_token %}"
+	alert ("Hello 6, csrf_token: " + csrf_token);
     var url_run_model = "{% url 'bmd:edit' endpoint.pk %}",
         url_options = "{% url 'bmd:options' bmds_version endpoint.data_type %}",
         url_template = "{% url 'bmd:template' endpoint.pk %}";
@@ -325,6 +395,7 @@
         session.selection.rebuild_plot();
       }, 100)
     });
+	alert("alert at the end ??");
   </script>
   <script src="{{STATIC_URL}}bmd/js/modeling.js" type="text/javascript"></script>
 {% endblock %}
