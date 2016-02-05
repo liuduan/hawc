@@ -168,12 +168,6 @@ Dose Incidence NEGATIVE_RESPONSE
 350.000000 6 14"/>
    
    
-   
-   
-   
-	
-   
-   
    <button id="BMDS_run_diverge" class="btn btn-large btn-primary">Test Run BMDS</button>
 </form>
 
@@ -376,7 +370,8 @@ Dose Incidence NEGATIVE_RESPONSE
     var crud = '{{ crud }}';
 	alert ("Hello 5" + '{{ crud }}');
     var bmds_version = '{{bmds_version}}';
-    var csrf_token = "{% csrf_token %}"
+    // var csrf_token = "{{ csrf_token }}"
+	var csrf_token = "{% csrf_token %}"
 	alert ("Hello 6, csrf_token: " + csrf_token);
     var url_run_model = "{% url 'bmd:edit' endpoint.pk %}",
         url_options = "{% url 'bmd:options' bmds_version endpoint.data_type %}",
