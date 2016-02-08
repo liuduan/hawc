@@ -173,6 +173,66 @@ Dose Incidence NEGATIVE_RESPONSE
 
 
 
+<script type="text/javascript">
+
+
+var car = {type:"Fiat", model:"500", color:"white"};
+
+
+var submittion_str = {
+    "models": [
+        {   
+            "id": 31,
+            "model_name": "LogLogistic",
+            "dfile": "LogLogistic\nBMDS_Model_Run\ntest\noutput.out\n5\n250 1e-08 1e-08 0 1 1 1 0 0\n0.1 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Incidence NEGATIVE_RESPONSE\n0.000000 0 20\n50.000000 0 20\n150.000000 3 17\n250.000000 6 14\n350.000000 6 14\n"
+        },
+        {   
+            "id": 32,
+            "model_name": "LogLogistic",
+            "dfile": "LogLogistic\nBMDS_Model_Run\ntest\noutput.out\n5\n250 1e-08 1e-08 0 1 1 1 0 0\n0.1 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Incidence NEGATIVE_RESPONSE\n0.000000 0 20\n50.000000 0 20\n150.000000 3 17\n250.000000 6 14\n350.000000 6 14\n"
+        }
+    ]
+};
+
+
+
+$('#BMDS_run_diverge').click(function(e){
+			
+            e.preventDefault();
+
+            var args = JSON.stringify(submittion_str);
+			// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
+			url_run_model_remote = "http://52.24.231.219/BMDS_receivings_2.php";
+            $.post(url_run_model_remote, args, function(d) {
+				// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
+				// alert("url_run_model 2 = "+ data);
+				
+                $('#selection_div').remove();
+                $('#BMDS_runstatus').remove();
+				// alert("After post 1: "+ results);
+                crud = "Edit";
+				alert("url_run_model 2 = "+ '');
+                results = $.parseJSON(d);
+                session = new Session(results, endpoint, logics, crud, bmds_version);
+				alert("After post: "+ Object.keys(results));
+                $('#bmd_logic_tab').trigger('click');
+				alert("After post 2: ");
+				
+            });
+        });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -359,20 +419,17 @@ Dose Incidence NEGATIVE_RESPONSE
   
     var bmds_version = '{{bmds_version}}';
     //var endpoint = new Endpoint({{endpoint.d_response|safe}});
-	alert ("Hello 3");
+	// alert ("Hello 3");
 	// alert("parent_template_name" + {{name}});
 	var endpoint = new Endpoint({{endpoint.d_response|safe}});		//LD modified
-	alert ("Hello 4"+ '{{endpoint.d_response|safe}}');
-	alert ("Hello 4.5: "+ '{{name}}');
+	// alert ("Hello 4"+ '{{endpoint.d_response|safe}}');
+	// alert ("Hello 4.5: "+ '{{name}}');
     var bmd_ds_plot = new DRPlot(endpoint, '#bmd_ds_plot');
     var bmd_output_plot = new DRPlot(endpoint, '#bmd_output_plot');
     var raw_output_img = new DRPlot(endpoint, '#raw_output_img');
     var crud = '{{ crud }}';
-	alert ("Hello 5" + '{{ crud }}');
     var bmds_version = '{{bmds_version}}';
-    // var csrf_token = "{{ csrf_token }}"
 	var csrf_token = "{% csrf_token %}"
-	alert ("Hello 6, csrf_token: " + csrf_token);
     var url_run_model = "{% url 'bmd:edit' endpoint.pk %}",
         url_options = "{% url 'bmd:options' bmds_version endpoint.data_type %}",
         url_template = "{% url 'bmd:template' endpoint.pk %}";

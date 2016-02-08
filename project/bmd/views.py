@@ -70,9 +70,9 @@ class BMDCreate(BaseCreate):
     # print "endpoint", endpoint
     
     
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs): 
         ## pdb.set_trace() ##
-        model_settings = loads(request.body)  # json
+        model_settings = loads(request.body)  ## json
         units = get_object_or_404(DoseUnits, pk=model_settings.get('dose_units_id'))
         print '(request.body)', (request.body)
         logging.debug('saving new session')
@@ -105,7 +105,7 @@ class BMDCreate(BaseCreate):
         
         # print "HttpResponse: ", (HttpResponse(dumps(output), content_type="application/json"))
 
-        print '(dumps(output)): ', (dumps(output))
+        # print '(dumps(output)): ', (dumps(output))
         # print '(output): ', dir(output)
         
         return HttpResponse(dumps(output), content_type="application/json")

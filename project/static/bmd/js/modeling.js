@@ -135,17 +135,22 @@ $(document).ready(function () {
             $('#BMDS').append(status);
             var d = session.submit_settings();
             var args = JSON.stringify(d);
-			alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
+			// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
             $.post(url_run_model, args, function(d) {
-				alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
+				// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
+				// alert("url_run_model 2 = "+ data);
+				
                 $('#selection_div').remove();
                 $('#BMDS_runstatus').remove();
 				// alert("After post 1: "+ results);
                 crud = "Edit";
+				alert("url_run_model 2 = "+ '');
                 results = $.parseJSON(d);
                 session = new Session(results, endpoint, logics, crud, bmds_version);
-				// alert("After post: "+ results);
+				alert("After post: "+ Object.keys(results));
                 $('#bmd_logic_tab').trigger('click');
+				alert("After post 2: ");
+				
             });
         });
 
