@@ -14,6 +14,16 @@ Some of the variables are provided by .\project\bmd\views.py
 
 {% block title %}
   {{assessment}} | {{endpoint.study}} | {{endpoint}} | Edit BMD Modeling | HAWC
+  
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $("p").hide();
+    });
+});
+</script>
 {% endblock %}
 
 
@@ -47,6 +57,12 @@ Some of the variables are provided by .\project\bmd\views.py
       {% endif %}
     <div>
   {% endif %}
+
+
+
+
+
+
 
   <!-- Tabs at the top -->
   <ul class="nav nav-tabs">
@@ -173,8 +189,14 @@ Dose Incidence NEGATIVE_RESPONSE
 
 <button id="BMDS_run_diverge_2" class="btn btn-large btn-primary">Test Run BMDS 2</button>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 <script type="text/javascript">
 
+$(document).ready(function(){
+    $("button").click(function(){
+        $("p").hide();
+    });
+});
 
 var car = {type:"Fiat", model:"500", color:"white"};
 
@@ -195,15 +217,84 @@ var submittion_str = {
 };
 
 
+alert("Data: " + "" + "\nStatus: " + "");
+var submiting_data = {"name": "Donald Duck", "city": "Duckburg"};
 
-$('#BMDS_run_diverge_2').click(function(e){
-			
-            e.preventDefault();
-
-            var args = JSON.stringify(submittion_str);
+$("#BMDS_run_diverge_2").click(function(){
+	alert("Data 2: " + "" + "\nStatus: " + "");
+	
+	$.ajax({url: "http://52.24.231.219/ajaxll.php", 
+				data: "submiting_data",
+				contentType: "txt",
+				datatype: "json",
+				
+				type: 'POST',
+				
+				success: function(){
+            		alert("Works");
+					// alert("result: "+result);
+					},
+				error: function(xhr, textStatus, error){
+      				console.log(xhr.statusText);
+      				console.log(textStatus);
+      				console.log(error);
+					alert("Error: "+ textStatus);}
+				// error: function(xhr){alert("An error occured: " + xhr.status + " " + xhr.statusText);},
+				/*
+				error: function(jqXHR, textStatus, errorThrown) {
+        			console.log(JSON.stringify(jqXHR));
+        			console.log("AJAX error: " + textStatus + ' : ' + errorThrown);
+					alert("AJAX error: " + textStatus + ' : ' + errorThrown);
+					
+ 					},*/
+				// error:function(exception){alert('Exeption:'+exception);}
+        });
+	alert("resonse 12: ");
+	/*
+	var d = session.submit_settings();
+    var args = JSON.stringify(d);
+	var url_run_model_2= 'http://52.24.231.219/BMDS_receivings_2.php'
 			// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
-			url_run_model_remote = "http://52.24.231.219/BMDS_receivings_2.php";
-            $.post(url_run_model_remote, args, function(d) {
+    $.post(url_run_model, submiting_data, function(args) {
+				alert("url_run_model 1");
+				// alert("url_run_model 2 = "+ data);
+				
+                $('#selection_div').remove();
+                $('#BMDS_runstatus').remove();
+				// alert("After post 1: "+ results);
+                crud = "Edit";
+				alert("url_run_model 2 = "+ d);
+                results = $.parseJSON(d);
+                session = new Session(results, endpoint, logics, crud, bmds_version);
+				alert("After post: "+ Object.keys(results));
+                $('#bmd_logic_tab').trigger('click');
+				alert("After post 2: ");
+				
+            });*/
+	/*
+	$.post("http://52.24.231.219/BMDS_receivings_2.php",
+        submiting_data,
+        function(submiting_data, status)
+			{
+            alert("Data 3: " + "" + "\nStatus: " + status);
+        });
+	*/
+	
+	/*
+	$.post("http://52.24.231.219/BMDS_receivings_2.php", function(data, status){
+        alert("Data: " + data + "\nStatus: " + status);
+    });*/
+            // e.preventDefault();
+			// window.location.href = 'http://52.24.231.219/BMDS_receivings_2.php';
+			/*
+            // var args = JSON.stringify(submittion_str);
+			alert("url_run_model 1 = "+ url_run_model + ", args = " + args);
+			// url_run_model_remote = "http://52.24.231.219/BMDS_receivings_2.php";
+            	$.post("http://52.24.231.219/BMDS_receivings_2.php", 'args', function(Data, status) 
+				{alert("Data: " + Data +  "\nStatus: " + status) });
+			
+				alert("url_run_model 2 = "+ url_run_model + ", args = " + 'args');
+				// window.location.href = 'http://52.24.231.219/BMDS_receivings_2.php';
 				// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
 				// alert("url_run_model 2 = "+ data);
 				
@@ -218,7 +309,9 @@ $('#BMDS_run_diverge_2').click(function(e){
                 $('#bmd_logic_tab').trigger('click');
 				alert("After post 2: ");
 				
-            });
+				
+				
+            });*/
         });
 
 </script>
