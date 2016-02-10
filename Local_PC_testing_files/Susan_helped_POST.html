@@ -15,17 +15,12 @@ Susan Liu (LIU Zhonghong) helped to figure out.
 
 <body>
 <h1>Search our Phone Directory</h1>
-    <form id="searchform" method="post">
-<div>
-        <label for="search_term">Search name/phone</label>
-        <input type="text" name="search_term" id="search_term" />
-<input type="submit" value="search" id="search_button" />
-</div>
-    </form>
-    <div id="search_results"></div>
  
- <p>   
-    
+ <form action="http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php" method="post">
+  First name: <input type="text" name="fname"><br>
+  Last name: <input type="text" name="lname"><br>
+  <input type="submit" value="Submit">
+</form> 
     
 <button id="BMDS_run_diverge_2" class="btn btn-large btn-primary">Test Run BMDS 2</button>
 </body>
@@ -33,33 +28,6 @@ Susan Liu (LIU Zhonghong) helped to figure out.
 
 <script type='text/javascript'>
 $(document).ready(function(){
-$("#search_results").slideUp();
-    $("#search_button").click(function(e){
-        e.preventDefault();
-        ajax_search();
-    });
-    $("#search_term").keyup(function(e){
-        e.preventDefault();
-        ajax_search();
-    });
-
-});
-
-function ajax_search(){
-  $("#search_results").show();
-  var search_val=$("#search_term").val();
-  $.post("http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/ajaxll.php", {search_term : search_val}, 		
-  	function(data){
-   		if (data.length>0){
-     		$("#search_results").html(data);
-   		};
-   	alert("Success, data = " + data);
-  })
-}
-
-
-
-
 
 
 var submittion_str = {
@@ -77,15 +45,16 @@ var submittion_str = {
     ]
 };
 
-var submittion = {"submittion" : '59'};
+var submittion = {"submittion" : 59};
 $("#BMDS_run_diverge_2").click(function(e){
 	alert("Clicked");
-  	$.post("http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/ajaxll.php", submittion_str, 		
+  	$.post("http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php", submittion, 		
   		function(data){
    			alert("Success, data = " + data);
+			window.location = "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php";       
 		}
 	)})
    	
 
-
+})
 </script>
