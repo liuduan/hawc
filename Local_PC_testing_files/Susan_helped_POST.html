@@ -23,6 +23,7 @@ Susan Liu (LIU Zhonghong) helped to figure out.
 </form> 
     
 <button id="BMDS_run_diverge_2" class="btn btn-large btn-primary">Test Run BMDS 2</button>
+<button id="BMDS_run_diverge_3" class="btn btn-large btn-primary">Test Run BMDS 3</button>
 </body>
 </html>
 
@@ -30,31 +31,45 @@ Susan Liu (LIU Zhonghong) helped to figure out.
 $(document).ready(function(){
 
 
-var submittion_str = {
-    "models": [
-        {   
-            "id": 31,
-            "model_name": "LogLogistic",
-            "dfile": "LogLogistic\nBMDS_Model_Run\ntest\noutput.out\n5\n250 1e-08 1e-08 0 1 1 1 0 0\n0.1 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Incidence NEGATIVE_RESPONSE\n0.000000 0 20\n50.000000 0 20\n150.000000 3 17\n250.000000 6 14\n350.000000 6 14\n"
-        },
-        {   
-            "id": 32,
-            "model_name": "LogLogistic",
-            "dfile": "LogLogistic\nBMDS_Model_Run\ntest\noutput.out\n5\n250 1e-08 1e-08 0 1 1 1 0 0\n0.1 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Incidence NEGATIVE_RESPONSE\n0.000000 0 20\n50.000000 0 20\n150.000000 3 17\n250.000000 6 14\n350.000000 6 14\n"
-        }
-    ]
+
+var submittion = {
+   "submittion-1":"59",
+   "submittion-2":"60"
 };
 
-var submittion = {"submittion" : 59};
+
+
 $("#BMDS_run_diverge_2").click(function(e){
 	alert("Clicked");
   	$.post("http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php", submittion, 		
   		function(data){
    			alert("Success, data = " + data);
-			window.location = "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php";       
+			//window.location = "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php";
 		}
-	)})
-   	
-
+	)
 })
+
+
+$("#BMDS_run_diverge_3").click(function(e){
+	// alert("Clicked");
+	$.ajax({url: "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php", 
+		data: {data: JSON.stringify(submittion)},
+		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
+		contentType: "text/plain",
+		method: "POST",
+		// dataType: ,	// The data type to receive. datatype : "application/json",
+		cache: false, // The browser not to store content
+ 		
+    	
+		success: function(data){
+   			alert("Success, data = " + data);
+			// window.location = "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php";
+    	}
+	});
+})
+
+}
+)
+
+
 </script>
