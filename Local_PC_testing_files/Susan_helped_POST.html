@@ -14,12 +14,27 @@ Susan Liu (LIU Zhonghong) helped to figure out.
 </head>
 
 <body>
-<h1>Post Testing</h1>
+<h1>Post Testing</h1><pre>
+The object looks like this:
+
+[models]
+	[0]
+    	[id]: 31,
+        [output_text]: "abcd....",
+        [output_image]: ""
+        
+   	[1]
+    	[id]: 32,
+        [output_text]: "abcd....",
+        [output_image]: ""
+        
+        
+	</pre>
 <button class="btn btn-large btn-primary">Alert</button>
 
 <button id="BMDS_run_diverge_3" class="btn btn-large btn-primary">Test Run BMDS 3</button>
 
-<div id="retured_content"></div>
+<div id="show_content"></div>
 </body>
 </html>
 
@@ -59,14 +74,27 @@ $("#BMDS_run_diverge_3").click(function(e){
 		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
 		contentType: "text/plain",
 		method: "POST",
-		// dataType: ,	// The data type to receive. datatype : "application/json",
+		// dataType: "application/json",	// The data type to receive. datatype : "application/json",
 		cache: false, // The browser not to store content
  		
     	
 		success: function(data){
-   			alert("Success, data = " + data);
-			if (data.length>0){
-     			// $("#retured_content").html(data);
+			// alert("success..**");
+			
+			var obj = JSON.parse(data);
+			$("#show_content").html("great, obj.models.toString(): <br>" +
+				obj.models.toString()+ 
+				"<br> This should work: "+ Object.getOwnPropertyNames(obj.models[0])+
+				"<br>Result file: <pre>" + obj.models[0].output_text.toString() +"<pre>");
+			// alert(obj.models.toString());
+			// alert(Object.getOwnPropertyNames(obj.models[0]));		// problem in this line with '0'
+			
+			// alert(obj.models.id.0);
+			// var obj_string = obj.toString()
+			// alert("Success, just data = " + data);
+   			// alert("Success, data = " + data.models.id);
+			if (obj_string.length>0){
+     			$("#retured_content").html(obj_string);
    			} 
     	}
 	});
@@ -74,6 +102,5 @@ $("#BMDS_run_diverge_3").click(function(e){
 
 }
 )
-
 
 </script>

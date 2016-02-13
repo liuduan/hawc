@@ -8,39 +8,69 @@ header("Access-Control-Allow-Origin: *");
 	The json receiving is working with plain text transfer. After that, signs like %22%2C are replaced by ",
 So it will fit into json_decode() in PHP. 
 
+	The output file is in the same folder as the input file, and with the same file nanme, 
+	but the extension is different. The output file extention is .OUT;
+
 	Susan Liu (LIU Zhonghong) helped to figure out.
 	-- Duan Liu, 2016-Feb 
 */
 
 header("Access-Control-Allow-Origin: *");
-echo "Hello, here is from server:..";
-echo '<br>=================================*';
+// echo "Hello, here is from server:..";
+$dir = ".\\Temp_BMDS_files";
+$dh  = opendir($dir);
+while (false !== ($filename = readdir($dh))) {
+    $files[] = $filename;
+}
+
+sort($files);
+// echo '<pre>';
+// print_r($files);
+// echo '</pre>';
+
+// echo 'time(): '. time();
+// echo '<br>';
+
+for ($i = 0; $i < count($files); ++$i) {
+	if ($files[$i] != "." AND  $files[$i] != ".."){
+		if ((time() - filemtime('.\\Temp_BMDS_files\\'.$files[$i])) > 86400){		// more than 24 hours old
+			unlink('.\\Temp_BMDS_files\\'.$files[$i]);
+			}
+		// echo "***". date ("F d Y H:i:s.", filemtime('.\\Temp_BMDS_files\\'.$files[$i]));
+		}    
+}
+
+
+
+// echo '<br>=================================*';
 $from_input = file_get_contents('php://input'); 
 
-echo '<br>working: echo $from_input: ';
+// echo '<br>working: echo $from_input: ';
 // echo $from_input;
 
 $from_input = PostString_to_jsonString($from_input);
 
-echo '<br>###################### working: echo $from_input, should be ready for json_decode(): ';
+// echo '<br>###################### working: echo $from_input, should be ready for json_decode(): ';
 // echo $from_input;
 
 $obj_from_input = json_decode($from_input, true, $depth = 512);		// true for associated array.
-echo '============================================================print_r($obj_from_input): ';
+// echo '============================================================print_r($obj_from_input): ';
 
-print_r($obj_from_input);
-echo '=======--==---***';
+// print_r($obj_from_input);
+// echo '=======--==---***';
+
+$output_ar = array();
 
 
 foreach ($obj_from_input['models'] as $k => $v) {			// $k has value 0, 1, ....
-    echo $k; // print_r($v);
+    // echo $k; // print_r($v);
 	$dfile_str = $obj_from_input['models'][$k]['dfile'];
-	echo '### $dfile_str: '. $dfile_str;
+	// echo '### $dfile_str: '. $dfile_str;
 	$before = strstr($dfile_str,"\n", true);
 
 	$after = strstr($dfile_str,"\n", false);
-	echo '### $before: '. $before;
-	echo '### $after: '. $after;
+	// echo '### $before: '. $before;
+	// echo '### $after: '. $after;
 
 	//put the id number into the User Notes.
 	$before = $before. "\nBMDS_Model_Run, ID: ". $obj_from_input['models'][$k]['id']. strstr($after,"\n", true);;
@@ -57,11 +87,11 @@ foreach ($obj_from_input['models'] as $k => $v) {			// $k has value 0, 1, ....
 	$before = $before. "\n". $output_file_name. strstr($after,"\n", true);;
 	$after = strstr(substr($after, 2),"\n", false); 
 	
-	echo '###====== $before: '. $before;
-	echo '#### $after: '. $after;
+	// echo '###====== $before: '. $before;
+	// echo '#### $after: '. $after;
 	
 	$dfile_str = $before. $after;
-	echo '#### $dfile_str: '. $dfile_str;
+	// echo '#### $dfile_str: '. $dfile_str;
 
 	# Save file to disk
 	$file = $input_file_name;
@@ -69,32 +99,22 @@ foreach ($obj_from_input['models'] as $k => $v) {			// $k has value 0, 1, ....
 	
 	$execution = shell_exec('.\\BMDS2601\\logist .\\Temp_BMDS_files\\'. $input_file_name);
 	# The output file is in the same folder as the input file, and with the same file nanme, 
-	# but the extension is 		different. The output file extention is .OUT;
+	# but the extension is different. The output file extention is .OUT;
+	
+	$output_ar['models'][$k]['id'] = $obj_from_input['models'][$k]['id'];
+	$output_ar['models'][$k]['output_text'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
+	$output_ar['models'][$k]['image'] = "";
 	
 }
 
+// echo '***+++++++--== print_r($output_ar): ';
+// print_r($output_ar);
 
+$output_json = json_encode($output_ar);
 
+// echo '***+++++++--======================== echo $output_json;';
+echo $output_json;
 
-
-
-/*
-//open file for input
-$output_json_array = array("models"=>array(0=>array("id"=>31, 
-	"output_txt"=>file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name), "output_image"=>""),
-											1=>array("id"=>32, 
-	"output_txt"=>file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name), "output_image"=>"")));
-	
-$output_json_str = json_encode($output_json_array);
-*/
-
-echo "***+++++++--========================";
-// echo file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
-
-
-
-echo "***+++++++--==";
-// print_r($obj_from_input['models']);
 
 
 

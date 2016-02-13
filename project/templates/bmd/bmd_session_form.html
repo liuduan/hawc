@@ -250,86 +250,10 @@ $("#BMDS_run_diverge_2").click(function(){
 				// error:function(exception){alert('Exeption:'+exception);}
         });
 	alert("resonse 12: ");
-	/*
-	var d = session.submit_settings();
-    var args = JSON.stringify(d);
-	var url_run_model_2= 'http://52.24.231.219/BMDS_receivings_2.php'
-			// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
-    $.post(url_run_model, submiting_data, function(args) {
-				alert("url_run_model 1");
-				// alert("url_run_model 2 = "+ data);
-				
-                $('#selection_div').remove();
-                $('#BMDS_runstatus').remove();
-				// alert("After post 1: "+ results);
-                crud = "Edit";
-				alert("url_run_model 2 = "+ d);
-                results = $.parseJSON(d);
-                session = new Session(results, endpoint, logics, crud, bmds_version);
-				alert("After post: "+ Object.keys(results));
-                $('#bmd_logic_tab').trigger('click');
-				alert("After post 2: ");
-				
-            });*/
-	/*
-	$.post("http://52.24.231.219/BMDS_receivings_2.php",
-        submiting_data,
-        function(submiting_data, status)
-			{
-            alert("Data 3: " + "" + "\nStatus: " + status);
-        });
-	*/
 	
-	/*
-	$.post("http://52.24.231.219/BMDS_receivings_2.php", function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
-    });*/
-            // e.preventDefault();
-			// window.location.href = 'http://52.24.231.219/BMDS_receivings_2.php';
-			/*
-            // var args = JSON.stringify(submittion_str);
-			alert("url_run_model 1 = "+ url_run_model + ", args = " + args);
-			// url_run_model_remote = "http://52.24.231.219/BMDS_receivings_2.php";
-            	$.post("http://52.24.231.219/BMDS_receivings_2.php", 'args', function(Data, status) 
-				{alert("Data: " + Data +  "\nStatus: " + status) });
-			
-				alert("url_run_model 2 = "+ url_run_model + ", args = " + 'args');
-				// window.location.href = 'http://52.24.231.219/BMDS_receivings_2.php';
-				// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
-				// alert("url_run_model 2 = "+ data);
-				
-                $('#selection_div').remove();
-                $('#BMDS_runstatus').remove();
-				// alert("After post 1: "+ results);
-                crud = "Edit";
-				alert("url_run_model 2 = "+ '');
-                results = $.parseJSON(d);
-                session = new Session(results, endpoint, logics, crud, bmds_version);
-				alert("After post: "+ Object.keys(results));
-                $('#bmd_logic_tab').trigger('click');
-				alert("After post 2: ");
-				
-				
-				
-            });*/
         });
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
