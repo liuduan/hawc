@@ -5,8 +5,9 @@
 <html lang="en-us">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>{% block title %}Health Assessment Workspace Collaborative (HAWC){% endblock %}</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=10; IE=9; IE=Edge;">
+    <title>{% block title %}Health Assessment Workspace Collaborative (HAWC){% endblock %}</title>     
+    <meta http-equiv="X-UA-Compatible" content="IE=10; IE=9; IE=Edge;">	
+    		
     <link id="favicon" href="{{STATIC_URL}}img/favicon-256.png" rel="shortcut icon" sizes="256x256">
     <link id="favicon" href="{{STATIC_URL}}img/favicon-128.png" rel="shortcut icon" sizes="128x128">
     <link id="favicon" href="{{STATIC_URL}}img/favicon-64.png" rel="shortcut icon" sizes="64x64">
@@ -16,6 +17,7 @@
     {% block extrahead %}{% endblock %}
     {% if debug %}
       <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}debug/twitter-bootstrap/2.2.2/css/bootstrap.css" />
+
       <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}debug/twitter-bootstrap/2.2.2/css/bootstrap-responsive.css" />
       <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}debug/jqueryui/1.10.3/css/jquery-ui.css">
     {% else %}
@@ -31,6 +33,10 @@
   </head>
 
   <body {% block bodyattrs %}class="fill"{% endblock %}>
+hello..**
+++==&&&**34567
+
+
 
     <!-- Navigation bar -->
     <div class="navbar navbar-fixed-top">
@@ -103,10 +109,10 @@
       <script type="text/javascript" src="{{STATIC_URL}}debug/backbone/backbone.js"></script>
       <script type="text/javascript" src="{{STATIC_URL}}debug/jquery/1.9.1/jquery.js" ></script>
       <script type="text/javascript" src="{{STATIC_URL}}debug/twitter-bootstrap/2.2.2/bootstrap.js" ></script>
-      <script type="text/javascript" src="{{STATIC_URL}}debug/jqueryui/1.10.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}debug/jqueryui/1.10.3/jquery-ui.js"></script>
       <script type="text/javascript" src="{{STATIC_URL}}debug/diff_match_patch/20121119/diff_match_patch.js"></script>
       <script type="text/javascript" src="{{STATIC_URL}}debug/tablesort/4.0.0/tablesort.min.js"></script>
-    {% else %}
+ <!--     {% else %}-->
       <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
       <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
       <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>

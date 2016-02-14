@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 /* This file is used to test the .post() function as a remote server file
 It was located at http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/ajaxll.php.
 The local PC testing file was ./Local_PC_testing_files/Susan_helped-2.html 
@@ -12,10 +13,19 @@ So it will fit into json_decode() in PHP.
 	but the extension is different. The output file extention is .OUT;
 
 	Susan Liu (LIU Zhonghong) helped to figure out.
+	==========================
+	During the communication between the HAWC web site and a Windows server, multiple models can be sent at the same time.
+	In the current testing event, two models were sent to the windows server at Amazon Web Services, and the model .(D) files were sent in Json serial text. $.ajax() function of jQuery was used to submit. In contrast to $.post() function, $ajax() has more control, e.g. submitting and receiving data type.
+	After the Windows server received the post, some characters in the json text serial was modified, e.g. double quotation (“) was changed to %22, and ({) was changed to %7B. A PHP function was created to change the characters back. The json text serial is then converted into PHP array. The .(D) file was saved to a file. More than one .(D) files could be sent in one post, therefore, each .(D) file are saved with different file names. A serial number is generated and saved on the Windows server, so the file name will look like dfile-25.(d), and the numeric portion will range from 0 – 1000. PHP program will execute a shell command to run BMDS. All the .(D) files and the resulting files (.OUT files) are kept in ./Temp_BMDS_files/ folder, and they will be deleted when it is more than 24 hours old in current setting.
+	The resulting files are all in the same folder as the .(D) file in ./Temp_BMDS_files/ folder. These files are sent back to HAWC site in json format, which is decoded in JavaScript with the function var obj = JSON.parse(data). The results of decoding is now a JavaScript array, and the .OUT file can be accessed in commands similar to obj.models[0].output_text.toString().
+	In order for $.ajax() post to work, in HAWC the line {% else %} needs to be commented out (<!-- {% else %}-->). That line is located close to the end of the file of ./project/templates/base.html. It might have other problem.
+	Similarly, this line in remote PHP file is required to allow post access in Amazon Web Services:
+header("Access-Control-Allow-Origin: *");
+	For HAWC site, the changes are embedded in the ./project/templates/bmd/bmd_session_form.html, and /Local_PC_testing_files/Susan_helped_POST.html is for POST testing. The Windows server file is /Windows_server/BMDS_execution.php.  
+
 	-- Duan Liu, 2016-Feb 
 */
 
-header("Access-Control-Allow-Origin: *");
 // echo "Hello, here is from server:..";
 $dir = ".\\Temp_BMDS_files";
 $dh  = opendir($dir);
