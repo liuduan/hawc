@@ -10,8 +10,10 @@ Some of the variables are provided by .\project\bmd\views.py
 In the current testing event, two models were sent to the windows server at Amazon Web Services, and the model .(D) files were sent in Json serial text. $.ajax() function of jQuery was used to submit. In contrast to $.post() function, $ajax() has more control, e.g. submitting and receiving data type.
 	After the Windows server received the post, some characters in the json text serial was modified, e.g. double quotation (“) was changed to %22, and ({) was changed to %7B. A PHP function was created to change the characters back. The json text serial is then converted into PHP array. The .(D) file was saved to a file. More than one .(D) files could be sent in one post, therefore, each .(D) file are saved with different file names. A serial number is generated and saved on the Windows server, so the file name will look like dfile-25.(d), and the numeric portion will range from 0 – 1000. PHP program will execute a shell command to run BMDS. All the .(D) files and the resulting files (.OUT files) are kept in ./Temp_BMDS_files/ folder, and they will be deleted when it is more than 24 hours old in current setting.
 	The resulting files are all in the same folder as the .(D) file in ./Temp_BMDS_files/ folder. These files are sent back to HAWC site in json format, which is decoded in JavaScript with the function var obj = JSON.parse(data). The results of decoding is now a JavaScript array, and the .OUT file can be accessed in commands similar to obj.models[0].output_text.toString().
-    In order for $.ajax() post to work, in HAWC the line {% else %} needs to be commented out (<!-- {% else %}--/>). That line is located close to the end of the file of ./project/templates/base.html. It might have other problem.
-Similarly, this line in remote PHP file is required to allow post access in Amazon Web Services:
+    In order for $.ajax() post to work, Cross-Site Request Forgery (CSRF) affect post function. 
+The setup of CSRF is in ./project/static/js/hawc.js lines 294-322. 
+
+	Similarly, a line in remote PHP file is required to allow post access in Amazon Web Services:
 header("Access-Control-Allow-Origin: *");
     For HAWC site, the changes are embedded in the ./project/templates/bmd/bmd_session_form.html, and /Local_PC_testing_files/Susan_helped_POST.html is for POST testing. The Windows server file is /Windows_server/BMDS_execution.php.  
 
@@ -199,27 +201,9 @@ Dose Incidence NEGATIVE_RESPONSE
    <button id="BMDS_run_diverge" class="btn btn-large btn-primary">Test Run BMDS</button>
 </form>
 
-<button id="BMDS_run_diverge_2" class="btn btn-large btn-primary">Test Run BMDS 2</button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div id="show_content"></div>
 
-<button class="btn btn-large btn-primary">Alert</button>
-
-<button id="BMDS_run_diverge_3" class="btn btn-large btn-primary">Test Run BMDS 3</button>
+<button id="BMDS_run_diverge_2" class="btn btn-large btn-primary">Test Run BMDS 2</button>
 
 
 
@@ -228,12 +212,6 @@ Dose Incidence NEGATIVE_RESPONSE
 <script type="text/javascript">
 $(document).ready(function(){
 
-
-
-var submittion = {
-   "submittion-1":"59",
-   "submittion-2":"60"
-};
 
 var submittion_str = {
     "models": [
@@ -254,28 +232,34 @@ var submittion_str = {
 
 
 
-$("#BMDS_run_diverge_3").click(function(e){
+$("#BMDS_run_diverge_2").click(function(e){
 	// alert("Clicked");
+	// app.use(allowCrossDomain);
 	$.ajax({url: "http://52.24.231.219/BMDS_execution.php", 
 		data: {data: JSON.stringify(submittion_str)},
 		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
 		contentType: "text/plain",
 		method: "POST",
-		// dataType: "application/json",	// The data type to receive. datatype : "application/json",
+		// dataType: "json",	// The data type to receive. datatype : "application/json",
 		cache: false, // The browser not to store content
  		
     	
 		success: function(data){
-			// alert("success..**");
+			// alert("success.1"+ data);
 			var All_BMDS_result_text = "";
 			var obj = JSON.parse(data);
 			var n = 0;
 			for (n in obj.models) {
+				if (obj.models[n].id){
+				// alert('typeof n: ' + typeof n);
+				// alert("n: "+ n + ', Number.isSafeInteger(n): ' + Number.isSafeInteger(n));
+				// alert ('obj.models[n].id.toString(): '+ obj.models[n].id.toString());
+				
 				All_BMDS_result_text += "<br> Model Results From The BMDS Windows Server <br> " //+
 					+ "ID Number: " + obj.models[n].id.toString() + "<br>" 
 					+ "Output file .OUT: <pre>" + 
 					obj.models[n].output_text.toString() +"<pre>";
-				}
+			}}
 			$("#show_content").html(All_BMDS_result_text);
     	}
 		
@@ -287,6 +271,16 @@ $("#BMDS_run_diverge_3").click(function(e){
 }
 )
 
+allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+  if ('OPTIONS' === req.method) {
+    res.send(200);
+  } else {
+    next();
+  }
+};
 
 
 </script>
@@ -517,7 +511,7 @@ $("#BMDS_run_diverge_3").click(function(e){
         session.selection.rebuild_plot();
       }, 100)
     });
-	alert("alert at the end ??");
+	// alert("alert at the end ??");
   </script>
   <script src="{{STATIC_URL}}bmd/js/modeling.js" type="text/javascript"></script>
 {% endblock %}

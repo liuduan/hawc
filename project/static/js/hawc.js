@@ -312,13 +312,13 @@ csrfSafeMethod = function(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));  // safe methods
 };
 $.ajaxSetup({
-    crossDomain: false,
-    beforeSend: function(xhr, settings) {
+    crossDomain: true, //false,
+    /* beforeSend: function(xhr, settings) {
         if (!csrfSafeMethod(settings.type)) {
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
             xhr.setRequestHeader("sessionid", sessionid);
         }
-    }
+    }*/
 });
 
 

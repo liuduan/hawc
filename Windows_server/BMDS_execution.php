@@ -23,6 +23,9 @@ So it will fit into json_decode() in PHP.
 header("Access-Control-Allow-Origin: *");
 	For HAWC site, the changes are embedded in the ./project/templates/bmd/bmd_session_form.html, and /Local_PC_testing_files/Susan_helped_POST.html is for POST testing. The Windows server file is /Windows_server/BMDS_execution.php.  
 
+     Cross-Site Request Forgery (CSRF) affect post function. 
+     The setup of CSRF is in ./project/static/js/hawc.js lines 294-322. 
+
 	-- Duan Liu, 2016-Feb 
 */
 

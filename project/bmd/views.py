@@ -127,7 +127,6 @@ class BMDCreate(BaseCreate):
         logics = self.assessment.BMD_Logic_Fields.all()
         context['logics'] = models.LogicField.website_list_return(logics, self.parent.data_type, True)
         context['bmds_version'] = self.assessment.BMD_Settings.BMDS_version
-        context['bmds_version'] = 85
         context['Test'] = 'Test'
         context['name'] = 'foo'
         print "Hello world, within def get_context_data #####################################################"
