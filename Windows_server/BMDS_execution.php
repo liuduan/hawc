@@ -73,7 +73,7 @@ $obj_from_input = json_decode($from_input, true, $depth = 512);		// true for ass
 $output_ar = array();
 // echo '<br>$obj_from_input[id] = '. $obj_from_input['id']. '<br>';
 
-foreach ($obj_from_input["submittion_array"] as $k => $v) {			// cycle the content of [0] and [1]
+foreach ($obj_from_input as $k => $v) {			// cycle the content of [0] and [1]
 
 	// echo '<br>888888888888888888888888888888888888888888888888<br>$v: '. $v;
 	// print_r($v);
@@ -129,6 +129,10 @@ foreach ($obj_from_input["submittion_array"] as $k => $v) {			// cycle the conte
 		# The output file is in the same folder as the input file, and with the same file nanme, 
 		# but the extension is different. The output file extention is .OUT;
 	
+	$the_002_file = substr($input_file_name, 0, -4). '.002';
+	// echo '<br>$the_002_file = '. $the_002_file. '<br>';
+	
+	$Plot_base64_str = Plot_002_base64($the_002_file, $v["model_app_name"]);
 	
 	// $output_ar= array();
 	// echo '<br>$k = '. $k. '<br>';
@@ -137,7 +141,10 @@ foreach ($obj_from_input["submittion_array"] as $k => $v) {			// cycle the conte
 	$output_ar[$k]['output_text'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
 	// echo '<br>$output_ar[$k]["model_app_name"] = '. $output_ar[$k]["model_app_name"]. '<br>';
 	// echo '<br>$output_ar[$k][output_text] = '. $output_ar[$k]['output_text']. '<br>';
-	$output_ar[$k]['image'] = "";
+	$output_ar[$k]['image_str'] = $Plot_base64_str;
+	
+	
+	
 }
 
 
@@ -171,13 +178,87 @@ function PostString_to_jsonString($from_input) {
 }
 
 function Serial_number() {
-	// This function take a serial number from ./Serial.txt; 
+	// This function takes a serial number from ./Serial.txt; 
 	// and it will add a number each time of access,
 	// after 1000, it will reset to 1.
     $Serial_number = file_get_contents('.\\Serial.txt');
-	if ($Serial_number > 1000){$Serial_number = $Serial_number - 1000;}
+	if ($Serial_number > 3000){$Serial_number = $Serial_number - 1000;}
 	file_put_contents('.\\Serial.txt', ($Serial_number + 1));
 	return $Serial_number;
+}
+
+function Plot_002_base64($the_002_file, $model_app_name) {
+	// This function takes $a_002_file and $model_app_name; 
+	// and make the plot,
+	switch ($model_app_name) {
+    	case "exponential":
+        	$execution = shell_exec('.\\BMDS2601\\00expo .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "hill":
+        	$execution = shell_exec('.\\BMDS2601\\00Hill .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "poly":
+        	$execution = shell_exec('.\\BMDS2601\\00poly .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "power":
+        	$execution = shell_exec('.\\BMDS2601\\00power .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "nctr":
+        	$execution = shell_exec('.\\BMDS2601\\05nctr .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "nlogist":
+        	$execution = shell_exec('.\\BMDS2601\\05Nlogist .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "raivr":
+        	$execution = shell_exec('.\\BMDS2601\\05raivr .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "cancer":
+        	$execution = shell_exec('.\\BMDS2601\\10cancer .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "cancer_bg_dose":
+        	$execution = shell_exec('.\\BMDS2601\\10cancer_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "DichoHill":
+        	$execution = shell_exec('.\\BMDS2601\\10DichoHill .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "Gamma_bgdose":
+        	$execution = shell_exec('.\\BMDS2601\\10gamma_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "logist":
+        	$execution = shell_exec('.\\BMDS2601\\10logist .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "logist_bg_response":
+        	$execution = shell_exec('.\\BMDS2601\\10logist_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "multistage":
+        	$execution = shell_exec('.\\BMDS2601\\10multista .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "multistage_bg_dose":
+        	$execution = shell_exec('.\\BMDS2601\\10multista_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "probit":
+        	$execution = shell_exec('.\\BMDS2601\\10probit .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "probit_bg_response":
+        	$execution = shell_exec('.\\BMDS2601\\10probit_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "weibull":
+        	$execution = shell_exec('.\\BMDS2601\\10weibull .\\Temp_BMDS_files\\'. $the_002_file);
+        	break;
+    	case "weibull_bg_response":
+        	$execution = shell_exec('.\\BMDS2601\\10weibull_bg .\\Temp_BMDS_files\\'. $the_002_file);
+			// echo '<br>The command = '. '.\\BMDS2601\\10weibull_bg .\\Temp_BMDS_files\\'. $the_002_file. '<br>';
+        	break;
+		
+		}
+	$plot_file_name = substr($the_002_file, 0, -4). '.PLT';
+	$plot = file_get_contents('.\\Temp_BMDS_files\\'.$plot_file_name);
+	// echo '$plot = 66666666666666666666666666666666666666666'. $plot;
+	$base64_plt_str = base64_encode ( $plot );
+	
+	// echo 'substr($base64_plt_str, 0, 300) = 444444444444444444444444444444'. substr($base64_plt_str, 0, 300);
+	
+	return $base64_plt_str;
 }
 
 
