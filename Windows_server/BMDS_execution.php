@@ -30,10 +30,12 @@ header("Access-Control-Allow-Origin: *");
 */
 
 // echo "Hello, here is from server:..";
+
+// file operation.
 $dir = ".\\Temp_BMDS_files";
 $dh  = opendir($dir);
 while (false !== ($filename = readdir($dh))) {
-    $files[] = $filename;
+    $files[] = $filename;			// read files into an array.
 }
 
 sort($files);
@@ -44,81 +46,100 @@ sort($files);
 // echo 'time(): '. time();
 // echo '<br>';
 
+// delete the files after 24 hours.
 for ($i = 0; $i < count($files); ++$i) {
 	if ($files[$i] != "." AND  $files[$i] != ".."){
 		if ((time() - filemtime('.\\Temp_BMDS_files\\'.$files[$i])) > 86400){		// more than 24 hours old
 			unlink('.\\Temp_BMDS_files\\'.$files[$i]);
 			}
-		// echo "***". date ("F d Y H:i:s.", filemtime('.\\Temp_BMDS_files\\'.$files[$i]));
 		}    
 }
 
 
 
-// echo '<br>=================================*';
+// receiving post input.
 $from_input = file_get_contents('php://input'); 
+// echo '$from_input'. $from_input;
 
-// echo '<br>working: echo $from_input: ';
-// echo $from_input;
-
+// Transfer post string into jSon string, change %22, %3A signs.
 $from_input = PostString_to_jsonString($from_input);
 
-// echo '<br>###################### working: echo $from_input, should be ready for json_decode(): ';
-// echo $from_input;
-
+// Transfer json string into PHP object.
 $obj_from_input = json_decode($from_input, true, $depth = 512);		// true for associated array.
-// echo '============================================================print_r($obj_from_input): ';
 
 // print_r($obj_from_input);
 // echo '=======--==---***';
 
 $output_ar = array();
+// echo '<br>$obj_from_input[id] = '. $obj_from_input['id']. '<br>';
+
+foreach ($obj_from_input["submittion_array"] as $k => $v) {			// cycle the content of [0] and [1]
+
+	// echo '<br>888888888888888888888888888888888888888888888888<br>$v: '. $v;
+	// print_r($v);
+	$dfile_str = $v["dfile"];
+	// echo '<br><br>$dfile_str: '. $dfile_str;
 
 
-foreach ($obj_from_input['models'] as $k => $v) {			// $k has value 0, 1, ....
-    // echo $k; // print_r($v);
-	$dfile_str = $obj_from_input['models'][$k]['dfile'];
-	// echo '### $dfile_str: '. $dfile_str;
 	$before = strstr($dfile_str,"\n", true);
 
 	$after = strstr($dfile_str,"\n", false);
-	// echo '### $before: '. $before;
-	// echo '### $after: '. $after;
+		// echo '### $before: '. $before;
+		// echo '### $after: '. $after;
 
-	//put the id number into the User Notes.
-	$before = $before. "\nBMDS_Model_Run, ID: ". $obj_from_input['models'][$k]['id']. strstr($after,"\n", true);;
+		//put the id number into the User Notes.
+	$before = $before. "\nBMDS_Model_Run, ID: ". $obj_from_input['id']. strstr($after,"\n", true);
 	$after = strstr(substr($after, 2),"\n", false); 
 	
-	//set the input file name
+		//set the input file name
 	$serial = Serial_number();
-	$input_file_name = "dfile-". $serial. '.(d)';
+	$input_file_name = $v["model_app_name"]. '-'. $serial. '.(d)';
 	$before = $before. "\n". $input_file_name. strstr($after,"\n", true);;
 	$after = strstr(substr($after, 2),"\n", false); 
 	
-	//set the output file name
+		//set the output file name
 	$output_file_name = substr($input_file_name, 0, -4). '.out';
 	$before = $before. "\n". $output_file_name. strstr($after,"\n", true);;
 	$after = strstr(substr($after, 2),"\n", false); 
 	
-	// echo '###====== $before: '. $before;
-	// echo '#### $after: '. $after;
+		// echo '###====== $before: '. $before;
+		// echo '#### $after: '. $after;
 	
 	$dfile_str = $before. $after;
-	// echo '#### $dfile_str: '. $dfile_str;
+		// echo '#### $dfile_str: '. $dfile_str;
 
-	# Save file to disk
-	$file = $input_file_name;
-	file_put_contents(('.\\Temp_BMDS_files\\'.$file), $dfile_str);
+		# Save file to disk
+	$file = '.\\Temp_BMDS_files\\'.$input_file_name;
+		
+		// echo "<br>Excution command: ". '.\\BMDS2601\\'. $vv["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name;
+		// echo '<br>$file = $input_file_name;: '. $file;
+		// echo "<br>$dfile_str, the .(D) file: ". $dfile_str;
+		
+		// $fp = fopen($file, 'a') or die('fopen failed'.$file);
+  			// fwrite($fp, $dfile_str) or die('fwrite failed');
+		// fclose($fp);
+
+	file_put_contents($file, $dfile_str);
+
+		// sleep(1);
+
+
+	$execution = shell_exec('.\\BMDS2601\\'. $v["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name);
+	// echo '<br>command:  '. '.\\BMDS2601\\'. $v["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name. '<br>';
+		# The output file is in the same folder as the input file, and with the same file nanme, 
+		# but the extension is different. The output file extention is .OUT;
 	
-	$execution = shell_exec('.\\BMDS2601\\logist .\\Temp_BMDS_files\\'. $input_file_name);
-	# The output file is in the same folder as the input file, and with the same file nanme, 
-	# but the extension is different. The output file extention is .OUT;
 	
-	$output_ar['models'][$k]['id'] = $obj_from_input['models'][$k]['id'];
-	$output_ar['models'][$k]['output_text'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
-	$output_ar['models'][$k]['image'] = "";
-	
+	// $output_ar= array();
+	// echo '<br>$k = '. $k. '<br>';
+	$output_ar[$k]['id'] = $v["id"];
+	$output_ar[$k]["model_app_name"] = $v["model_app_name"];
+	$output_ar[$k]['output_text'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
+	// echo '<br>$output_ar[$k]["model_app_name"] = '. $output_ar[$k]["model_app_name"]. '<br>';
+	// echo '<br>$output_ar[$k][output_text] = '. $output_ar[$k]['output_text']. '<br>';
+	$output_ar[$k]['image'] = "";
 }
+
 
 // echo '***+++++++--== print_r($output_ar): ';
 // print_r($output_ar);
@@ -126,8 +147,10 @@ foreach ($obj_from_input['models'] as $k => $v) {			// $k has value 0, 1, ....
 $output_json = json_encode($output_ar);
 
 // echo '***+++++++--======================== echo $output_json;';
-echo $output_json;
 
+
+
+echo $output_json;
 
 
 
@@ -142,6 +165,7 @@ function PostString_to_jsonString($from_input) {
 	$from_input = str_replace("%5C", '\\', $from_input);
 	$from_input = str_replace("%5D", ']', $from_input);
 	$from_input = str_replace("%5B", '[', $from_input);
+	$from_input = str_replace("+", ' ', $from_input);
 	$from_input = substr($from_input, 5, (strlen($from_input)-5));
 	return $from_input;
 }
