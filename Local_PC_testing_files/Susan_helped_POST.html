@@ -20,6 +20,7 @@ Susan Liu (LIU Zhonghong) helped to figure out.
 
 <button id="BMDS_run_diverge_3" class="btn btn-large btn-primary">Test Run BMDS 3</button>
 <div id="show_content"></div>
+<div id='ct'></div>
 
 ==============================================<br>
 <pre>
@@ -38,8 +39,8 @@ The object looks like this:
 	</pre>
 
 
-<input type="button" value="Start Timer" onclick="display_c(86501);"/> | <input type="button" value="End Timer" onclick="stop();"/>
-<span id='ct' style="background-color: #FFFF00"></span>
+<button type="button" onclick="seconds_elapse();"> Seconds Elapsed</button>
+
 
 
 
@@ -54,12 +55,6 @@ The object looks like this:
 <script type='text/javascript'>
 $(document).ready(function(){
 
-
-
-var submittion = {
-   "submittion-1":"59",
-   "submittion-2":"60"
-};
 
 
 var submittion_str = [{"id":31, "model_app_name":"logist",
@@ -118,8 +113,7 @@ var submittion_str = [{"id":31, "model_app_name":"logist",
 
 
 $("#BMDS_run_diverge_3").click(function(e){
-	alert("Clicked, please wait (about 10 seconds.)" );
-	$("#show_content").html("<br><br>This process can takes about 10 seconds. The start ime is: <br><br>" + Date()+ ". <br><br>");
+	seconds_elapse();
 	$.ajax({url: "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php", 
 		data: {data: JSON.stringify(submittion_str)},
 		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
@@ -130,7 +124,7 @@ $("#BMDS_run_diverge_3").click(function(e){
  		
     	
 		success: function(data){
-			// alert("Post success..**" + data);
+			clearTimeout(seconds_100);
 			$("#show_content").html("Received data: <br>.." + data + ".. <br>..");
 			
 			var obj = JSON.parse(data);
@@ -161,44 +155,22 @@ $("#BMDS_run_diverge_3").click(function(e){
 
 <script type="text/javascript">
 
+var i = 0;
+var seconds_100;
 
-var d = new Date();
-var n = d.getTime();
-
-function display_c(start){
-    window.start = parseFloat(start);
-    var end = 0 // change this to stop the counter at a higher value
-    var refresh=1000; // Refresh rate in milli seconds
-    if(window.start >= end ){
-        mytime=setTimeout('display_ct()',refresh)
-    } else {
-        alert("Time Over ");
-    }
+function seconds_elapse(){
+	$("#show_content").html("<br><br>This process can takes about 10 seconds.  <br><br>" + 
+		"Time: <font size='6' color='blue' face='verdana', bold>  " + i + "</font>   Seconds.<br>");
+	i = i + 1;
+	if (i > 100){
+		$("#show_content").html("Error, please try to reload, or report the problem.");
+	}
+	seconds_100 = setTimeout("display_time()",1000);
 }
 
-function display_ct() {
-    // Calculate the number of days left
-    var days=Math.floor(window.start / 86400);
-    // After deducting the days calculate the number of hours left
-    var hours = Math.floor((window.start - (days * 86400 ))/3600)
-    // After days and hours , how many minutes are left
-    var minutes = Math.floor((window.start - (days * 86400 ) - (hours *3600 ))/60)
-    // Finally how many seconds left after removing days, hours and minutes.
-    var secs = Math.floor((window.start - (days * 86400 ) - (hours *3600 ) - (minutes*60)))
-
-    var x = window.start + "(" + secs + " Secondes " + ")";
-	var x = window.start;
-
-    document.getElementById('ct').innerHTML = x;
-    window.start= window.start- 1;
-
-    tt=display_c(window.start);
+function display_time() {
+	seconds_elapse()
 }
-
-function stop() {
-    clearTimeout(mytime);
-}
-
 </script>
 
 
