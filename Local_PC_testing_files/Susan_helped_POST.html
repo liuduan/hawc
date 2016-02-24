@@ -39,7 +39,7 @@ The object looks like this:
 	</pre>
 
 
-<button type="button" onclick="seconds_elapse();"> Seconds Elapsed</button>
+<button type="button" onClick="seconds_elapse();"> Seconds Elapsed</button>
 
 
 
@@ -131,8 +131,8 @@ $("#BMDS_run_diverge_3").click(function(e){
 			
 			$("#show_content").html('json conversion works. <br><br><br>' + data + '<br>' + 
 				obj[0].model_app_name);
-			$("#show_content").html('json conversion works 2. <br><br><br>' + data + '<br>' + 
-				obj[11].output_text);
+			$("#show_content").html('json conversion works 2. <br><br><br>' + data + '<br>"<pre>"' + 
+				obj[4].OUT_file_str);
 			// var id_content_arr = obj.models[0].id_content.
 			
 			// $("#show_content").html('Great, obj.models.toString(): <br>' + id_content_arr);
@@ -141,8 +141,8 @@ $("#BMDS_run_diverge_3").click(function(e){
 				"<br>Results for one of the models<br><br>" + 
 				"id: " + obj[4].id.toString() +"<br>" +
 				"Model name: " + obj[4].model_app_name.toString() +"<br>" +
-				"<br>Result file: <pre>" + obj[4].output_text.toString() +"<pre>" +
-				"<br>Plot, .PLT file in base64: <br>" + obj[4].image_str.toString());
+				"<br>Result file: <pre>" + obj[4].OUT_file_str.toString() +"<pre>" +
+				"<br>Plot, .PLT file string: <br>" + obj[4].PLT_file_str.toString());
     	}
 	});
 })
@@ -159,8 +159,8 @@ var i = 0;
 var seconds_100;
 
 function seconds_elapse(){
-	$("#show_content").html("<br><br>This process can takes about 10 seconds.  <br><br>" + 
-		"Time: <font size='6' color='blue' face='verdana', bold>  " + i + "</font>   Seconds.<br>");
+	$("#show_content").html("<br>This process usually takes about 10 seconds. The start ime is: <br><br>" + 
+		"Time: <font size='6' color='blue' face='verdana'><b> &nbsp&nbsp" + i + "&nbsp&nbsp</font></b>   Seconds.");
 	i = i + 1;
 	if (i > 100){
 		$("#show_content").html("Error, please try to reload, or report the problem.");

@@ -9,7 +9,7 @@ Some of the variables are provided by .\project\bmd\views.py
     During the communication between the HAWC web site and a Windows server, multiple models can be sent at the same time.
 In the current testing event, two models were sent to the windows server at Amazon Web Services, and the model .(D) files were sent in Json serial text. $.ajax() function of jQuery was used to submit. In contrast to $.post() function, $ajax() has more control, e.g. submitting and receiving data type.
 	After the Windows server received the post, some characters in the json text serial was modified, e.g. double quotation (“) was changed to %22, and ({) was changed to %7B. A PHP function was created to change the characters back. The json text serial is then converted into PHP array. The .(D) file was saved to a file. More than one .(D) files could be sent in one post, therefore, each .(D) file are saved with different file names. A serial number is generated and saved on the Windows server, so the file name will look like dfile-25.(d), and the numeric portion will range from 0 – 1000. PHP program will execute a shell command to run BMDS. All the .(D) files and the resulting files (.OUT files) are kept in ./Temp_BMDS_files/ folder, and they will be deleted when it is more than 24 hours old in current setting.
-	The resulting files are all in the same folder as the .(D) file in ./Temp_BMDS_files/ folder. These files are sent back to HAWC site in json format, which is decoded in JavaScript with the function var obj = JSON.parse(data). The results of decoding is now a JavaScript array, and the .OUT file can be accessed in commands similar to obj.models[0].output_text.toString().
+	The resulting files are all in the same folder as the .(D) file in ./Temp_BMDS_files/ folder. These files are sent back to HAWC site in json format, which is decoded in JavaScript with the function var obj = JSON.parse(data). The results of decoding is now a JavaScript array, and the .OUT file can be accessed in commands similar to obj.models[0].OUT_file_str.toString().
     In order for $.ajax() post to work, Cross-Site Request Forgery (CSRF) affect post function. 
 The setup of CSRF is in ./project/static/js/hawc.js lines 294-322. 
 
@@ -270,7 +270,7 @@ $("#BMDS_run_diverge").click(function(e){
 			$("#show_content").html('json conversion works. <br><br><br>' + data + '<br>' + 
 				obj[0].model_app_name);
 			$("#show_content").html('json conversion works 2. <br><br><br>' + data + '<br>' + 
-				obj[11].output_text);
+				obj[11].OUT_file_str);
 			// var id_content_arr = obj.models[0].id_content.
 			
 			// $("#show_content").html('Great, obj.models.toString(): <br>' + id_content_arr);
@@ -279,8 +279,8 @@ $("#BMDS_run_diverge").click(function(e){
 				"<br>Results for one of the models<br><br>" + 
 				"id: " + obj[4].id.toString() +"<br>" +
 				"Model name: " + obj[4].model_app_name.toString() +"<br>" +
-				"<br>Result file: <pre>" + obj[4].output_text.toString() +"<pre>" +
-				"<br>Plot, .PLT file in base64: <br>" + obj[4].image_str.toString());
+				"<br>Result file: <pre>" + obj[4].OUT_file_str.toString() +"<pre>" +
+				"<br>Plot, .PLT file in base64: <br>" + obj[4].PLT_file_str.toString());
     	}
 	});
 })

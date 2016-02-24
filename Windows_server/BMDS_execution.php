@@ -17,7 +17,7 @@ So it will fit into json_decode() in PHP.
 	During the communication between the HAWC web site and a Windows server, multiple models can be sent at the same time.
 	In the current testing event, two models were sent to the windows server at Amazon Web Services, and the model .(D) files were sent in Json serial text. $.ajax() function of jQuery was used to submit. In contrast to $.post() function, $ajax() has more control, e.g. submitting and receiving data type.
 	After the Windows server received the post, some characters in the json text serial was modified, e.g. double quotation (“) was changed to %22, and ({) was changed to %7B. A PHP function was created to change the characters back. The json text serial is then converted into PHP array. The .(D) file was saved to a file. More than one .(D) files could be sent in one post, therefore, each .(D) file are saved with different file names. A serial number is generated and saved on the Windows server, so the file name will look like dfile-25.(d), and the numeric portion will range from 0 – 1000. PHP program will execute a shell command to run BMDS. All the .(D) files and the resulting files (.OUT files) are kept in ./Temp_BMDS_files/ folder, and they will be deleted when it is more than 24 hours old in current setting.
-	The resulting files are all in the same folder as the .(D) file in ./Temp_BMDS_files/ folder. These files are sent back to HAWC site in json format, which is decoded in JavaScript with the function var obj = JSON.parse(data). The results of decoding is now a JavaScript array, and the .OUT file can be accessed in commands similar to obj.models[0].output_text.toString().
+	The resulting files are all in the same folder as the .(D) file in ./Temp_BMDS_files/ folder. These files are sent back to HAWC site in json format, which is decoded in JavaScript with the function var obj = JSON.parse(data). The results of decoding is now a JavaScript array, and the .OUT file can be accessed in commands similar to obj.models[0].OUT_file_str.toString().
 	In order for $.ajax() post to work, in HAWC the line {% else %} needs to be commented out (<!-- {% else %}-->). That line is located close to the end of the file of ./project/templates/base.html. It might have other problem.
 	Similarly, this line in remote PHP file is required to allow post access in Amazon Web Services:
 header("Access-Control-Allow-Origin: *");
@@ -132,16 +132,16 @@ foreach ($obj_from_input as $k => $v) {			// cycle the content of [0] and [1]
 	$the_002_file = substr($input_file_name, 0, -4). '.002';
 	// echo '<br>$the_002_file = '. $the_002_file. '<br>';
 	
-	$Plot_base64_str = Plot_002_base64($the_002_file, $v["model_app_name"]);
+	$PLT_file_str = Plot_002($the_002_file, $v["model_app_name"]);
 	
 	// $output_ar= array();
 	// echo '<br>$k = '. $k. '<br>';
 	$output_ar[$k]['id'] = $v["id"];
 	$output_ar[$k]["model_app_name"] = $v["model_app_name"];
-	$output_ar[$k]['output_text'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
+	$output_ar[$k]['OUT_file_str'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
 	// echo '<br>$output_ar[$k]["model_app_name"] = '. $output_ar[$k]["model_app_name"]. '<br>';
-	// echo '<br>$output_ar[$k][output_text] = '. $output_ar[$k]['output_text']. '<br>';
-	$output_ar[$k]['image_str'] = $Plot_base64_str;
+	// echo '<br>$output_ar[$k][OUT_file_str] = '. $output_ar[$k]['OUT_file_str']. '<br>';
+	$output_ar[$k]['PLT_file_str'] = $PLT_file_str;
 	
 	
 	
@@ -187,7 +187,7 @@ function Serial_number() {
 	return $Serial_number;
 }
 
-function Plot_002_base64($the_002_file, $model_app_name) {
+function Plot_002($the_002_file, $model_app_name) {
 	// This function takes $a_002_file and $model_app_name; 
 	// and make the plot,
 	switch ($model_app_name) {
@@ -252,13 +252,13 @@ function Plot_002_base64($the_002_file, $model_app_name) {
 		
 		}
 	$plot_file_name = substr($the_002_file, 0, -4). '.PLT';
-	$plot = file_get_contents('.\\Temp_BMDS_files\\'.$plot_file_name);
+	$PLT_file_str = file_get_contents('.\\Temp_BMDS_files\\'.$plot_file_name);
 	// echo '$plot = 66666666666666666666666666666666666666666'. $plot;
-	$base64_plt_str = base64_encode ( $plot );
+	// $base64_plt_str = base64_encode ( $plot );
 	
 	// echo 'substr($base64_plt_str, 0, 300) = 444444444444444444444444444444'. substr($base64_plt_str, 0, 300);
 	
-	return $base64_plt_str;
+	return $PLT_file_str;
 }
 
 
