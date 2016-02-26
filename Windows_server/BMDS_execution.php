@@ -73,7 +73,7 @@ $obj_from_input = json_decode($from_input, true, $depth = 512);		// true for ass
 $output_ar = array();
 // echo '<br>$obj_from_input[id] = '. $obj_from_input['id']. '<br>';
 
-foreach ($obj_from_input as $k => $v) {			// cycle the content of [0] and [1]
+foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] and [1]
 
 	// echo '<br>888888888888888888888888888888888888888888888888<br>$v: '. $v;
 	// print_r($v);
@@ -132,7 +132,7 @@ foreach ($obj_from_input as $k => $v) {			// cycle the content of [0] and [1]
 	$the_002_file = substr($input_file_name, 0, -4). '.002';
 	// echo '<br>$the_002_file = '. $the_002_file. '<br>';
 	
-	$PLT_file_str = Plot_002($the_002_file, $v["model_app_name"]);
+	$base64_emf_str = Plot_2_base64($the_002_file, $v["model_app_name"]);
 	
 	// $output_ar= array();
 	// echo '<br>$k = '. $k. '<br>';
@@ -141,7 +141,7 @@ foreach ($obj_from_input as $k => $v) {			// cycle the content of [0] and [1]
 	$output_ar[$k]['OUT_file_str'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
 	// echo '<br>$output_ar[$k]["model_app_name"] = '. $output_ar[$k]["model_app_name"]. '<br>';
 	// echo '<br>$output_ar[$k][OUT_file_str] = '. $output_ar[$k]['OUT_file_str']. '<br>';
-	$output_ar[$k]['PLT_file_str'] = $PLT_file_str;
+	$output_ar[$k]['base64_emf_str'] = $base64_emf_str;
 	
 	
 	
@@ -187,7 +187,7 @@ function Serial_number() {
 	return $Serial_number;
 }
 
-function Plot_002($the_002_file, $model_app_name) {
+function Plot_2_base64($the_002_file, $model_app_name) {
 	// This function takes $a_002_file and $model_app_name; 
 	// and make the plot,
 	switch ($model_app_name) {
@@ -253,12 +253,23 @@ function Plot_002($the_002_file, $model_app_name) {
 		}
 	$plot_file_name = substr($the_002_file, 0, -4). '.PLT';
 	$PLT_file_str = file_get_contents('.\\Temp_BMDS_files\\'.$plot_file_name);
+
+	$plot_emf_file_name = substr($the_002_file, 0, -4). '_emf.PLT';	
+	$emf_file_name = substr($plot_emf_file_name, 0, -4). '.emf';
+	$new_str_lines = "reset \nset terminal emf \nset output '.\\Temp_BMDS_files\\". $emf_file_name. "' ";
+	$PLT_emf_str = str_replace("reset", $new_str_lines, $PLT_file_str);
+	file_put_contents(".\\Temp_BMDS_files\\". $plot_emf_file_name, $PLT_emf_str);
+	
+	
+	$execution = shell_exec('.\\BMDS2601\\gnuplot\\wgnuplot .\\Temp_BMDS_files\\'. $plot_emf_file_name);
+	
+	$emf_file_str = file_get_contents('.\\Temp_BMDS_files\\'. $emf_file_name);
 	// echo '$plot = 66666666666666666666666666666666666666666'. $plot;
-	// $base64_plt_str = base64_encode ( $plot );
+	$base64_emf_str = base64_encode ( $emf_file_str );
 	
 	// echo 'substr($base64_plt_str, 0, 300) = 444444444444444444444444444444'. substr($base64_plt_str, 0, 300);
 	
-	return $PLT_file_str;
+	return $base64_emf_str;
 }
 
 
