@@ -22,10 +22,6 @@ from bmds.bmds import BMDS
 from . import forms
 from . import models
 
-import pdb
-
-
-
 
 
 
@@ -48,7 +44,6 @@ class BMDRead(BaseDetail):
         logics = models.LogicField.objects.filter(assessment=self.assessment)
         context['logics'] = models.LogicField.website_list_return(logics, self.object.endpoint.data_type, True)
         context['bmds_version'] = self.assessment.BMD_Settings.BMDS_version
-        # context['bmds_version'] = "85"
         return context
 
 
@@ -62,23 +57,15 @@ class BMDCreate(BaseCreate):
     success_message = 'BMD modeling session created.'
     parent_model = Endpoint
     parent_template_name = 'endpoint'
-    # global foo = 'foo' # LD added
     model = models.BMD_session
     form_class = forms.BMD_SessionForm
-    print "Hello world, within class BMDCreate ############################################"
-    print parent_template_name
-    # print "endpoint", endpoint
-    
+
     
     def post(self, request, *args, **kwargs): 
-        ## pdb.set_trace() ##
-        model_settings = loads(request.body)  ## json
         units = get_object_or_404(DoseUnits, pk=model_settings.get('dose_units_id'))
-        print '(request.body)', (request.body)
         logging.debug('saving new session')
         session = models.BMD_session(endpoint=self.parent,
                                      BMDS_version=self.assessment.BMD_Settings.BMDS_version,
-                                     # BMDS_version= 85,
                                      bmrs=dumps(model_settings.get('bmrs')),
                                      dose_units=units)
 
@@ -91,25 +78,8 @@ class BMDCreate(BaseCreate):
             output = {'error': e.message}
 
             
-        print "within def post &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
-        print 'DoseUnits', (DoseUnits)
-        print 'DoseUnits.__dict__.keys(): ', (DoseUnits.__dict__.keys())
-        print 'DoseUnits.__dict__: ', (DoseUnits.__dict__)
-        dir(DoseUnits)
-        # print '_tetattr_', (DoseUnits.__getattr__)
-        # dir(assessment)
-        print 'output: ', (output)
-        print 'session.__dict__.keys(): ', (session.__dict__.keys())
-        print 'session.__dict__: ', (session.__dict__)
 
-        
-        # print "HttpResponse: ", (HttpResponse(dumps(output), content_type="application/json"))
-
-        # print '(dumps(output)): ', (dumps(output))
-        # print '(output): ', dir(output)
-        
         return HttpResponse(dumps(output), content_type="application/json")
-        # return HttpResponse("Hello 7")
 
     def get_context_data(self, **kwargs):
         context = super(BMDCreate, self).get_context_data(**kwargs)
@@ -127,15 +97,8 @@ class BMDCreate(BaseCreate):
         logics = self.assessment.BMD_Logic_Fields.all()
         context['logics'] = models.LogicField.website_list_return(logics, self.parent.data_type, True)
         context['bmds_version'] = self.assessment.BMD_Settings.BMDS_version
-        context['Test'] = 'Test'
-        context['name'] = 'foo'
-        print "Hello world, within def get_context_data #####################################################"
-        print dir(context)
-        print (context)
 
-        
         return context
-    # print endpoint
 
 
 class BMDVersions(BMDRead):

@@ -84,14 +84,10 @@ class SVGConverter():
         fn_in = os.path.join(self.temp_path, fn + '.svg')
         fn_out = os.path.join(self.temp_path, fn + output_extension)
 
-        print 'hello: '. self.svg.encode
 
         with open(fn_in, 'w') as f:
             f.write(self.svg.encode('utf-8'))
-            
-        ff = open('test_test.txt', 'w')             #LD added 2016-2-1
-        ff.write(self.svg.encode('utf-8'))
-        ff.close()
+
 
         return (fn_in, fn_out)
 

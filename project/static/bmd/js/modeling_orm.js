@@ -991,10 +991,8 @@ Selection.prototype = {
         args = JSON.stringify(args);
         var url = '/bmd/model/' + this.parent.session.pk + '/select/';
         var redirect_url = '/ani/endpoint/' + this.parent.endpoint.data.pk  + '/';
-        alert("This is rul:" + url);
-		$.post(url, args, function(d) {
+ 		$.post(url, args, function(d) {
             document.location.href= redirect_url;
-			// alert("This is rul:" + url);
         });
     }
 };
