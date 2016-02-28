@@ -514,15 +514,14 @@ allowCrossDomain = function(req, res, next) {
 {% block extrajs %}
   <script src="{{STATIC_URL}}bmd/js/modeling_orm.js" type="text/javascript"></script>
   <script type="text/javascript">
-  
     var bmds_version = '{{bmds_version}}';
-	var endpoint = new Endpoint({{endpoint.d_response|safe}});		//LD modified
+    var endpoint = new Endpoint({{endpoint.d_response|safe}});		//LD modified
     var bmd_ds_plot = new DRPlot(endpoint, '#bmd_ds_plot');
     var bmd_output_plot = new DRPlot(endpoint, '#bmd_output_plot');
     var raw_output_img = new DRPlot(endpoint, '#raw_output_img');
     var crud = '{{ crud }}';
     var bmds_version = '{{bmds_version}}';
-	var csrf_token = "{% csrf_token %}"
+    var csrf_token = "{% csrf_token %}"
     var url_run_model = "{% url 'bmd:edit' endpoint.pk %}",
         url_options = "{% url 'bmd:options' bmds_version endpoint.data_type %}",
         url_template = "{% url 'bmd:template' endpoint.pk %}";

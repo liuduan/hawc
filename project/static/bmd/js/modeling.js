@@ -110,11 +110,9 @@ $(document).ready(function () {
             $('#BMDS_runstatus').remove();
             var status = $('<div id="BMDS_runstatus"></div>')
                             .append('<p>Running BMDS please wait... <img id="BMDS_runstatus" src="/static/img/loading.gif" /></p>');		// image for waiting.
-			
             $('#BMDS').append(status);
             var d = session.submit_settings();
             var args = JSON.stringify(d);
-			// alert("url_run_model 1 = "+ url_run_model + ", args = " + 'args');
             $.post(url_run_model, args, function(d) {
                 $('#selection_div').remove();
                 $('#BMDS_runstatus').remove();
@@ -122,7 +120,6 @@ $(document).ready(function () {
                 results = $.parseJSON(d);
                 session = new Session(results, endpoint, logics, crud, bmds_version);
                 $('#bmd_logic_tab').trigger('click');
-				
             });
         });
 
