@@ -77,8 +77,6 @@ class BMDCreate(BaseCreate):
         except Exception as e:
             output = {'error': e.message}
 
-            
-
         return HttpResponse(dumps(output), content_type="application/json")
 
     def get_context_data(self, **kwargs):

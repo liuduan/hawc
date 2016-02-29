@@ -1,0 +1,10 @@
+diff a/project/static/bmd/js/modeling_orm.js b/project/static/bmd/js/modeling_orm.js	(rejected hunks)
+@@ -991,7 +991,7 @@
+         args = JSON.stringify(args);
+         var url = '/bmd/model/' + this.parent.session.pk + '/select/';
+         var redirect_url = '/ani/endpoint/' + this.parent.endpoint.data.pk  + '/';
+- 		$.post(url, args, function(d) {
++		$.post(url, args, function(d) {
+             document.location.href= redirect_url;
+         });
+     }
