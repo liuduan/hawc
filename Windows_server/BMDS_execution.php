@@ -125,10 +125,7 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 		# The output file is in the same folder as the input file, and with the same file nanme, 
 		# but the extension is different. The output file extention is .OUT;
 	
-	$the_002_file = substr($input_file_name, 0, -4). '.002';
-	// echo '<br>$the_002_file = '. $the_002_file. '<br>';
-	
-	$base64_emf_str = Plot_2_base64($the_002_file, $v["model_app_name"]);
+
 	
 	// $output_ar= array();
 	// echo '<br>$k = '. $k. '<br>';
@@ -137,7 +134,15 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 	$output_ar[$k]['OUT_file_str'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
 	// echo '<br>$output_ar[$k]["model_app_name"] = '. $output_ar[$k]["model_app_name"]. '<br>';
 	// echo '<br>$output_ar[$k][OUT_file_str] = '. $output_ar[$k]['OUT_file_str']. '<br>';
-	$output_ar[$k]['base64_emf_str'] = $base64_emf_str;
+	
+	if ( $obj_from_input['options']['generate_emf'] == true ){
+		$the_002_file = substr($input_file_name, 0, -4). '.002';
+		// echo '<br>$the_002_file = '. $the_002_file. '<br>';
+		$base64_emf_str = Plot_2_base64($the_002_file, $v["model_app_name"]);
+		$output_ar[$k]['base64_emf_str'] = $base64_emf_str;
+	} else {
+    	$output_ar[$k]['base64_emf_str'] = "";
+	}
 	
 	
 	
