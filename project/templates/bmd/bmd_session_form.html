@@ -192,7 +192,7 @@ $(document).ready(function(){
 var submittion_str = {
     "options": {
         "bmds_version": "2.60", 
-        "generate_emf": true,  
+        "generate_emf": false,  
     },
     "runs": [{"id":31, "model_app_name":"logist",
 	"dfile":"LogLogistic\nBMDS_Model_Run\nLogLogistic.(D)\nLogLogistic.out\n5\n250 1e-08 1e-08 0 1 1 1 0 0\n0.1 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Incidence NEGATIVE_RESPONSE\n0.000000 0 20\n50.000000 0 20\n150.000000 3 17\n250.000000 6 14\n350.000000 6 14\n"
@@ -293,7 +293,7 @@ var i = 0;
 var seconds_100;
 
 function seconds_elapse(){
-	$("#show_content").html("<br>This process usually takes about 10 seconds. The start ime is: <br><br>" + 
+	$("#show_content").html("<br>This process usually takes about 10 seconds: <br><br>" + 
 		"Time: <font size='6' color='blue' face='verdana'><b> &nbsp&nbsp" + i + "&nbsp&nbsp</font></b>   Seconds.");
 	i = i + 1;
 	if (i > 100){

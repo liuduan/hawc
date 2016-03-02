@@ -1,0 +1,18 @@
+Amazon Virtual Server Setup for HAWC BMDS
+--- Duan Liu, 2016-2-29
+Amazon Web Service offers a one year free virtual server for either Windows server or Linux server, and the virtual Windows server fits our need very well. In addition to the general instruction to setup an Amazon Windows server (https://aws.amazon.com/ec2/), here are some special notes for running BMDS for HAWC site.
+Launching another instance is like buying a new PC computer, and everything starts from scratch.
+1.	Downloaded and tested BMDS again.
+2.	Download and install Bitnami WAMP (Windows Apache MySQL PHP)
+Here is the link:
+https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/install-WAMP.html
+	Other WAMP package should work just fine.
+3.	Verify that the security group for your instance has the following ports open:
+o	80 (HTTP inbound and outbound) - Port 80 allows computers outside of the instance to connect by using HTTP. 
+o	443 (HTTPS inbound and outbound) -
+4.	Change the Firewall setting, add Apache server, and allow to access internet.
+5.	When the new instance of the virtual server is up and running again, test whether PHP is running.
+6.	The web page files should be loaded to C:\bitnami\wampstack-5.5.31-0\apache2\htdocs. 
+This directory might change if you install different version or different package.
+7.	The web address is at the instance control window. For current server the address is:
+http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php
