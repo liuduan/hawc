@@ -59,12 +59,17 @@ $from_input = file_get_contents('php://input');
 
 // Transfer post string into jSon string, change %22, %3A signs.
 $from_input = PostString_to_jsonString($from_input);
+// echo '$from_input = '. $from_input;
+
 
 // Transfer json string into PHP object.
 $obj_from_input = json_decode($from_input, true, $depth = 512);		// true for associated array.
-
 // print_r($obj_from_input);
-// echo '=======--==---***';
+
+$BMDS_version = $obj_from_input['options']['bmds_version'];
+// print_r($obj_from_input);
+// echo '$BMDS_version: '. $BMDS_version. '<br>';
+// echo '$obj_from_input[options][emf_YN]: '. $obj_from_input['options']['emf_YN']. '<br>';
 
 $output_ar = array();
 // echo '<br>$obj_from_input[id] = '. $obj_from_input['id']. '<br>';
@@ -107,7 +112,7 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 		# Save file to disk
 	$file = '.\\Temp_BMDS_files\\'.$input_file_name;
 		
-		// echo "<br>Excution command: ". '.\\BMDS2601\\'. $vv["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name;
+		// echo "<br>Excution command: ". '.\\'. $BMDS_version. '\\'. $vv["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name;
 		// echo '<br>$file = $input_file_name;: '. $file;
 		// echo "<br>$dfile_str, the .(D) file: ". $dfile_str;
 		
@@ -117,11 +122,9 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 
 	file_put_contents($file, $dfile_str);
 
-		// sleep(1);
-
-
-	$execution = shell_exec('.\\BMDS2601\\'. $v["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name);
-	// echo '<br>command:  '. '.\\BMDS2601\\'. $v["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name. '<br>';
+	// echo 'Model_name: '. $v["model_app_name"]. '<br>';
+	$execution = shell_exec('.\\'. $BMDS_version. '\\'. $v["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name);
+	// echo '<br>command:  '. '.\\'. $BMDS_version. '\\'. $v["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name. '<br>';
 		# The output file is in the same folder as the input file, and with the same file nanme, 
 		# but the extension is different. The output file extention is .OUT;
 	
@@ -135,11 +138,15 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 	// echo '<br>$output_ar[$k]["model_app_name"] = '. $output_ar[$k]["model_app_name"]. '<br>';
 	// echo '<br>$output_ar[$k][OUT_file_str] = '. $output_ar[$k]['OUT_file_str']. '<br>';
 	
-	if ( $obj_from_input['options']['generate_emf'] == true ){
+	// echo '$obj_from_input[options][emf_YN] = '. $obj_from_input['options']['emf_YN']. '<br>';
+	
+	if ( $obj_from_input['options']['emf_YN'] == true ){
 		$the_002_file = substr($input_file_name, 0, -4). '.002';
 		// echo '<br>$the_002_file = '. $the_002_file. '<br>';
 		$base64_emf_str = Plot_2_base64($the_002_file, $v["model_app_name"]);
 		$output_ar[$k]['base64_emf_str'] = $base64_emf_str;
+		$output_ar[$k]['emf_link'] = 
+			'52.24.231.219/Temp_BMDS_files/'. substr($the_002_file, 0, -4). '_emf.EMF';
 	} else {
     	$output_ar[$k]['base64_emf_str'] = "";
 	}
@@ -191,64 +198,65 @@ function Serial_number() {
 function Plot_2_base64($the_002_file, $model_app_name) {
 	// This function takes $a_002_file and $model_app_name; 
 	// and make the plot,
+	global $BMDS_version;
 	switch ($model_app_name) {
     	case "exponential":
-        	$execution = shell_exec('.\\BMDS2601\\00expo .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\00expo .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "hill":
-        	$execution = shell_exec('.\\BMDS2601\\00Hill .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\00Hill .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "poly":
-        	$execution = shell_exec('.\\BMDS2601\\00poly .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\00poly .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "power":
-        	$execution = shell_exec('.\\BMDS2601\\00power .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\00power .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "nctr":
-        	$execution = shell_exec('.\\BMDS2601\\05nctr .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\05nctr .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "nlogist":
-        	$execution = shell_exec('.\\BMDS2601\\05Nlogist .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\05Nlogist .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "raivr":
-        	$execution = shell_exec('.\\BMDS2601\\05raivr .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\05raivr .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "cancer":
-        	$execution = shell_exec('.\\BMDS2601\\10cancer .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10cancer .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "cancer_bg_dose":
-        	$execution = shell_exec('.\\BMDS2601\\10cancer_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10cancer_bg .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "DichoHill":
-        	$execution = shell_exec('.\\BMDS2601\\10DichoHill .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10DichoHill .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "Gamma_bgdose":
-        	$execution = shell_exec('.\\BMDS2601\\10gamma_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10gamma_bg .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "logist":
-        	$execution = shell_exec('.\\BMDS2601\\10logist .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10logist .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "logist_bg_response":
-        	$execution = shell_exec('.\\BMDS2601\\10logist_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10logist_bg .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "multistage":
-        	$execution = shell_exec('.\\BMDS2601\\10multista .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10multista .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "multistage_bg_dose":
-        	$execution = shell_exec('.\\BMDS2601\\10multista_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10multista_bg .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "probit":
-        	$execution = shell_exec('.\\BMDS2601\\10probit .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10probit .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "probit_bg_response":
-        	$execution = shell_exec('.\\BMDS2601\\10probit_bg .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10probit_bg .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "weibull":
-        	$execution = shell_exec('.\\BMDS2601\\10weibull .\\Temp_BMDS_files\\'. $the_002_file);
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10weibull .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
     	case "weibull_bg_response":
-        	$execution = shell_exec('.\\BMDS2601\\10weibull_bg .\\Temp_BMDS_files\\'. $the_002_file);
-			// echo '<br>The command = '. '.\\BMDS2601\\10weibull_bg .\\Temp_BMDS_files\\'. $the_002_file. '<br>';
+        	$execution = shell_exec('.\\'. $BMDS_version. '\\10weibull_bg .\\Temp_BMDS_files\\'. $the_002_file);
+			// echo '<br>The command = '. ".\\". $BMDS_version. '\\10weibull_bg .\\Temp_BMDS_files\\'. $the_002_file. '<br>';
         	break;
 		
 		}
@@ -261,7 +269,7 @@ function Plot_2_base64($the_002_file, $model_app_name) {
 	$PLT_emf_str = str_replace("reset", $new_str_lines, $PLT_file_str);
 	file_put_contents(".\\Temp_BMDS_files\\". $plot_emf_file_name, $PLT_emf_str);
 	
-	
+	// echo 'makeing emf command: '. '.\\BMDS2601\\gnuplot\\wgnuplot .\\Temp_BMDS_files\\'. $plot_emf_file_name. '<br>';
 	$execution = shell_exec('.\\BMDS2601\\gnuplot\\wgnuplot .\\Temp_BMDS_files\\'. $plot_emf_file_name);
 	
 	$emf_file_str = file_get_contents('.\\Temp_BMDS_files\\'. $emf_file_name);
