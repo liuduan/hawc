@@ -139,8 +139,9 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 	// echo '<br>$output_ar[$k][OUT_file_str] = '. $output_ar[$k]['OUT_file_str']. '<br>';
 	
 	// echo '$obj_from_input[options][emf_YN] = '. $obj_from_input['options']['emf_YN']. '<br>';
-	
-	if ( $obj_from_input['options']['emf_YN'] == true ){
+	// echo '<br>$obj_from_input[options][emf_YN] = '. $obj_from_input['options']['emf_YN']. '<br>';
+	if ( $obj_from_input['options']['emf_YN'] == 'True' ){
+		// echo '<br>$obj_from_input[options][emf_YN] = '. $obj_from_input['options']['emf_YN']. '<br>';
 		$the_002_file = substr($input_file_name, 0, -4). '.002';
 		// echo '<br>$the_002_file = '. $the_002_file. '<br>';
 		$base64_emf_str = Plot_2_base64($the_002_file, $v["model_app_name"]);
@@ -149,6 +150,7 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 			'52.24.231.219/Temp_BMDS_files/'. substr($the_002_file, 0, -4). '_emf.EMF';
 	} else {
     	$output_ar[$k]['base64_emf_str'] = "";
+		$output_ar[$k]['emf_link'] = "";
 	}
 	
 	
