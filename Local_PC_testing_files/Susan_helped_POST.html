@@ -89,6 +89,7 @@ The output object looks like this:
 var bmds_version = "BMDS2601";
 var emf_YN = "False";
 
+
 $('#BMDS_version').on('change', function() {
 	bmds_version = $('#BMDS_version').val();
    	alert('bmds_version = ' + bmds_version); 
@@ -103,7 +104,7 @@ $('#emf_selection').on('change', function() {
 
 $(document).ready(function(){
 $("#BMDS_run_diverge").click(function(e){
-	alert("emf_YN: " + emf_YN + '; bmds_version = ' + bmds_version);
+	// alert("emf_YN: " + emf_YN + '; bmds_version = ' + bmds_version);
 	
 	
 var submittion_str = {
@@ -167,6 +168,36 @@ var submittion_str = {
 }
 	
 	
+	
+
+var submittion_str = {
+    "options": {
+        "bmds_version": bmds_version, 
+        "emf_YN": emf_YN
+    },
+    "runs": 
+
+[{"id":31, "model_app_name":"logist",
+	"dfile":"LogLogistic\nBMDS_Model_Run\nLogLogistic.(D)\nLogLogistic.out\n5\n250 1e-08 1e-08 0 1 1 1 0 0\n0.1 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Incidence NEGATIVE_RESPONSE\n0.000000 0 20\n50.000000 0 20\n150.000000 3 17\n250.000000 6 14\n350.000000 6 14\n"
+	},
+    {"id":35, "model_app_name":"exponential",
+	"dfile":"Exponential\nBMDS Model Run\nExponential.(D)\nExponential.out\n1 4 -1 1111 14 0 1\n500 0.00000001 0.00000001 0 1 1 0\n2 0.05 1 0.95\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56"
+
+	}
+]
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 	seconds_elapse();
@@ -188,22 +219,21 @@ var submittion_str = {
 			$("#show_content").html('json conversion works. <br><br><br>' + data + '<br>' + 
 				obj[0].model_app_name);
 			$("#show_content").html('json conversion works 2. <br><br><br>' + data + '<br>"<pre>"' + 
-				obj[4].OUT_file_str);
+				obj[1].OUT_file_str);
 			// var id_content_arr = obj.models[0].id_content.
 			
 			// $("#show_content").html('Great, obj.models.toString(): <br>' + id_content_arr);
 			$("#show_content").html('Great. Values extracted from returned jSon string. ' +
 				// "<br> This should work: "+ Object.getOwnPropertyNames(obj.models[0].id_content(0)) ); //+
 				"<br>Results for one of the models: <br><br>" + 
-				"id: " + obj[7].id.toString() +"<br>" +
-				"Model name: " + obj[7].model_app_name.toString() +"<br>" +
-				"<br>Resulting .OUT file: <pre>" + obj[7].OUT_file_str.toString() +"</pre>" +
-				"<br>EMF file link: <a href='http://" + obj[7].emf_link.toString() +
-					"'>" + obj[7].emf_link.toString() + "</a><br>" +
+				"id: " + obj[1].id.toString() +"<br>" +
+				"Model name: " + obj[1].model_app_name.toString() +"<br>" +
+				"<br>Resulting .OUT file: <pre>" + obj[1].OUT_file_str.M5.toString() +"</pre>" +
+				"<br>EMF file link: <a href='http://" + obj[1].emf_link.M5.toString() +
+				"'>" + obj[1].emf_link.M5.toString() + "</a><br>" +
 				"<br>Base64 decoded .emf file: <br>" + 
-				// "<img src = '" + 
-				obj[7].base64_emf_str.toString().substring(1, 85) + "<br>" +
-				obj[7].base64_emf_str.toString().substring(81, 160) + "......<br>" +
+				obj[1].base64_emf_str.M5.toString().substring(1, 85) + "<br>" +
+				obj[1].base64_emf_str.M5.toString().substring(81, 160) + "......<br>" +
 				"");		
 			$("#show_content").css("background-color","#B9B9FF");
 
