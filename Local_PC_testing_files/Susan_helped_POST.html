@@ -62,14 +62,15 @@ The output object looks like this:
 [
 	{"id":31, "model_app_name": "logist",
 		"OUT_file_str":"LogLogistic ..... ",
-		"base64_emf_str": " ...... "},		   // If generate_emf is true.
-    		"emf_link":"52.24.231.219/Temp_BMDS_files/logist-2755_emf.EMF"
+		"base64_emf_str": {"0":" ...... "}},		   // If generate_emf is true.
+    		"emf_link":{"0":52.24.231.219/Temp_BMDS_files/logist-2755_emf.EMF"}
         
-	{"id":32, "model_app_name": "gamma",
-		"OUT_file_str":"Gamma ..... ",
-		"base64_emf_str": " ...... "},		   // If generate_emf is true.
-    		"emf_link":"52.24.231.219/Temp_BMDS_files/gamma-2755_emf.EMF"
+	{"id":32, "model_app_name": "exponential",
+		"OUT_file_str":{"0":"", "M2":"exponential ..... ", ...},
+		"base64_emf_str": {"0":"", "M2":"..... ",},		   // If generate_emf is true.
+    	"emf_link":{"0":"", "M2":"52.24.231.219/Temp_BMDS_files/gamma-2755_emf.EMF"}
 	....
+    
 ]
      
         
@@ -115,7 +116,11 @@ var submittion_str = {
     "runs": 
 
 
-[{"id":31, "model_app_name":"logist",
+[
+	{"id":30, "model_app_name":"cancer",
+	"dfile":"Multistage-Cancer-BgDose\nBMDS_Model_Run\ncancer.(d)\ncancer.out\n5 1 \n500 1.00E-08 1.00E-08 0 1 1 0 0\n0.1000 0 0.95\n-9999 -9999\n0\n-9999 -9999\nDose Effect \nNEGATIVE_RESPONSE\n0 0 100\n50 5 95\n100 30 70\n150 65 35\n200 90 10"
+	},
+	{"id":31, "model_app_name":"logist",
 	"dfile":"LogLogistic\nBMDS_Model_Run\nLogLogistic.(D)\nLogLogistic.out\n5\n250 1e-08 1e-08 0 1 1 1 0 0\n0.1 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Incidence NEGATIVE_RESPONSE\n0.000000 0 20\n50.000000 0 20\n150.000000 3 17\n250.000000 6 14\n350.000000 6 14\n"
 	},
 	{"id":32, "model_app_name":"multistage",
@@ -186,18 +191,6 @@ var submittion_str = {
 	}
 ]
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	
 	seconds_elapse();
@@ -236,7 +229,7 @@ var submittion_str = {
 				obj[1].base64_emf_str.M5.toString().substring(81, 160) + "......<br>" +
 				"");		
 			$("#show_content").css("background-color","#B9B9FF");
-
+			
     	}
 	});
 })

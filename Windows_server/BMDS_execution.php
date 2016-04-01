@@ -146,7 +146,7 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 		$output_ar[$k]['OUT_file_str']['M5'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_nameM5);
 		}
 
-	// echo '<br>$output_ar[$k][OUT_file_str][0]'. $output_ar[$k]['OUT_file_str']['0']. '<br>';
+	// echo '<br>$output_ar[$k][OUT_file_str][0]'. $output_ar[$k]['OUT_file_str']['original']. '<br>';
 	// echo '<br>$output_file_nameM5'. $output_file_nameM5. '<br>';
 
 	
@@ -154,7 +154,7 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 	// echo '<br>$k = '. $k. '<br>';
 	$output_ar[$k]['id'] = $v["id"];
 	$output_ar[$k]["model_app_name"] = $v["model_app_name"];
-	$output_ar[$k]['OUT_file_str']['0'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
+	$output_ar[$k]['OUT_file_str']['original'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
 	// echo '<br>$output_ar[$k]["model_app_name"] = '. $output_ar[$k]["model_app_name"]. '<br>';
 	// echo '<br>$output_ar[$k][OUT_file_str] = '. $output_ar[$k]['OUT_file_str']. '<br>';
 	
@@ -168,8 +168,8 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 		
 		// echo '<br>$the_002_file = '. $the_002_file. '<br>';
 		$base64_emf_str = Plot_2_base64($the_002_file, $v["model_app_name"]);
-		$output_ar[$k]['base64_emf_str']['0'] = $base64_emf_str;
-		$output_ar[$k]['emf_link']['0'] = 
+		$output_ar[$k]['base64_emf_str']['original'] = $base64_emf_str;
+		$output_ar[$k]['emf_link']['original'] = 
 			'52.24.231.219/Temp_BMDS_files/'. substr($the_002_file, 0, -4). '_emf.EMF';
 			
 			
@@ -202,8 +202,8 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 			
 					
 	} else {
-    	$output_ar[$k]['base64_emf_str']['M5'] = "";
-		$output_ar[$k]['emf_link']['M5'] = "";
+    	$output_ar[$k]['base64_emf_str']['original'] = "";
+		$output_ar[$k]['emf_link']['original'] = "";
 	}
 	
 	
