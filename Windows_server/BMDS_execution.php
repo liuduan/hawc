@@ -99,15 +99,11 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 	$after = strstr(substr($after, 2),"\n", false); 
 	
 		//set the output file name
-	$output_file_name = substr($input_file_name, 0, -4). '.out';
-	if ($v["model_app_name"]== 'exponential'){
-		$output_file_nameM2 = "M2".substr($input_file_name, 0, -4). '.out';
-		$output_file_nameM3 = "M3".substr($input_file_name, 0, -4). '.out';
-		$output_file_nameM4 = "M4".substr($input_file_name, 0, -4). '.out';
-		$output_file_nameM5 = "M5".substr($input_file_name, 0, -4). '.out';
-		// echo '<br>It is exponential: '. $output_file_nameM5. '<br>';
+	if (substr($v["model_app_name"], 0, -3) == 'exponential'){
+		$output_file_name = substr($v["model_app_name"], -2, 2). substr($input_file_name, 0, -4). '.out';
+		// echo '<br>$output_file_name = '. $output_file_name;
 		}
-	
+		else{$output_file_name = substr($input_file_name, 0, -4). '.out';}		// Out put file name.
 	
 	$before = $before. "\n". $output_file_name. strstr($after,"\n", true);;
 	$after = strstr(substr($after, 2),"\n", false); 
@@ -121,89 +117,38 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 		# Save file to disk
 	$file = '.\\Temp_BMDS_files\\'.$input_file_name;
 		
-		// echo "<br>Excution command: ". '.\\'. $BMDS_version. '\\'. $vv["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name;
-		// echo '<br>$file = $input_file_name;: '. $file;
-		// echo "<br>$dfile_str, the .(D) file: ". $dfile_str;
-		
-		// $fp = fopen($file, 'a') or die('fopen failed'.$file);
-  			// fwrite($fp, $dfile_str) or die('fwrite failed');
-		// fclose($fp);
-
 	file_put_contents($file, $dfile_str);
 
-	// echo 'Model_name: '. $v["model_app_name"]. '<br>';
-	$execution = shell_exec('.\\'. $BMDS_version. '\\'. $v["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name);
-	// echo '<br>command:  '. '.\\'. $BMDS_version. '\\'. $v["model_app_name"]. ' .\\Temp_BMDS_files\\'. $input_file_name. '<br>';
-		# The output file is in the same folder as the input file, and with the same file nanme, 
-		# but the extension is different. The output file extention is .OUT;
-	
 
-	// For exponetial model, it produces 5 .OUT files, and 5 .002 files
-	if ($v["model_app_name"]== 'exponential'){
-		$output_ar[$k]['OUT_file_str']['M2'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_nameM2);
-		$output_ar[$k]['OUT_file_str']['M3'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_nameM3);
-		$output_ar[$k]['OUT_file_str']['M4'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_nameM4);
-		$output_ar[$k]['OUT_file_str']['M5'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_nameM5);
+	if (substr($v["model_app_name"], 0, -3) == 'exponential'){
+		
+		$execu_model_name = 'exponential';
+		// echo '<br>$execu_model_name = '. $execu_model_name;
 		}
+		else{$execu_model_name = $v["model_app_name"];}
 
-	// echo '<br>$output_ar[$k][OUT_file_str][0]'. $output_ar[$k]['OUT_file_str']['original']. '<br>';
-	// echo '<br>$output_file_nameM5'. $output_file_nameM5. '<br>';
+	$execution = shell_exec('.\\'. $BMDS_version. '\\'. $execu_model_name. ' .\\Temp_BMDS_files\\'. $input_file_name);
+	// echo '<br>command = '. './'. $BMDS_version. '/'. $execu_model_name. ' ./Temp_BMDS_files/'. $input_file_name;
 
-	
-	// $output_ar= array();
-	// echo '<br>$k = '. $k. '<br>';
 	$output_ar[$k]['id'] = $v["id"];
 	$output_ar[$k]["model_app_name"] = $v["model_app_name"];
-	$output_ar[$k]['OUT_file_str']['original'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
-	// echo '<br>$output_ar[$k]["model_app_name"] = '. $output_ar[$k]["model_app_name"]. '<br>';
-	// echo '<br>$output_ar[$k][OUT_file_str] = '. $output_ar[$k]['OUT_file_str']. '<br>';
-	
-	// echo '$obj_from_input[options][emf_YN] = '. $obj_from_input['options']['emf_YN']. '<br>';
-	// echo '<br>$obj_from_input[options][emf_YN] = '. $obj_from_input['options']['emf_YN']. '<br>';
+	$output_ar[$k]['OUT_file_str'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
+
 	if ( $obj_from_input['options']['emf_YN'] == 'True' ){
 		
-		
-		// echo '<br>$obj_from_input[options][emf_YN] = '. $obj_from_input['options']['emf_YN']. '<br>';
-		$the_002_file = substr($input_file_name, 0, -4). '.002';
+		$the_002_file = substr($output_file_name, 0, -4). '.002';
 		
 		// echo '<br>$the_002_file = '. $the_002_file. '<br>';
-		$base64_emf_str = Plot_2_base64($the_002_file, $v["model_app_name"]);
-		$output_ar[$k]['base64_emf_str']['original'] = $base64_emf_str;
-		$output_ar[$k]['emf_link']['original'] = 
-			'52.24.231.219/Temp_BMDS_files/'. substr($the_002_file, 0, -4). '_emf.EMF';
-			
-			
-		if ($v["model_app_name"]== 'exponential'){			
-			$the_002_fileM2 = substr($output_file_nameM2, 0, -4). '.002';
-			$the_002_fileM3 = substr($output_file_nameM3, 0, -4). '.002';
-			$the_002_fileM4 = substr($output_file_nameM4, 0, -4). '.002';
-			$the_002_fileM5 = substr($output_file_nameM5, 0, -4). '.002';
-			
-			$base64_emf_strM2 = Plot_2_base64($the_002_fileM2, $v["model_app_name"]);
-			$base64_emf_strM3 = Plot_2_base64($the_002_fileM3, $v["model_app_name"]);
-			$base64_emf_strM4 = Plot_2_base64($the_002_fileM4, $v["model_app_name"]);
-			$base64_emf_strM5 = Plot_2_base64($the_002_fileM5, $v["model_app_name"]);
+		$base64_emf_str = Plot_2_base64($the_002_file, $execu_model_name);
 		
-			$output_ar[$k]['base64_emf_str']['M2'] = $base64_emf_strM2;
-			$output_ar[$k]['base64_emf_str']['M3'] = $base64_emf_strM3;
-			$output_ar[$k]['base64_emf_str']['M4'] = $base64_emf_strM4;
-			$output_ar[$k]['base64_emf_str']['M5'] = $base64_emf_strM5;
-			
-			$output_ar[$k]['emf_link']['M2'] = '52.24.231.219/Temp_BMDS_files/'. 
-				substr($the_002_fileM2, 0, -4). '_emf.EMF';
-			$output_ar[$k]['emf_link']['M3'] = '52.24.231.219/Temp_BMDS_files/'. 
-				substr($the_002_fileM3, 0, -4). '_emf.EMF';
-			$output_ar[$k]['emf_link']['M4'] = '52.24.231.219/Temp_BMDS_files/'. 
-				substr($the_002_fileM4, 0, -4). '_emf.EMF';
-			$output_ar[$k]['emf_link']['M5'] = '52.24.231.219/Temp_BMDS_files/'. 
-				substr($the_002_fileM5, 0, -4). '_emf.EMF';
-			
-		}	
+		$output_ar[$k]['base64_emf_str'] = $base64_emf_str;
+		$output_ar[$k]['emf_link'] = 
+			'52.24.231.219/Temp_BMDS_files/'. substr($the_002_file, 0, -4). '_emf.EMF';
 			
 					
 	} else {
-    	$output_ar[$k]['base64_emf_str']['original'] = "";
-		$output_ar[$k]['emf_link']['original'] = "";
+    	$output_ar[$k]['base64_emf_str'] = "";
+		$output_ar[$k]['emf_link'] = "";
 	}
 	
 	
@@ -251,11 +196,11 @@ function Serial_number() {
 	return $Serial_number;
 }
 
-function Plot_2_base64($the_002_file, $model_app_name) {
+function Plot_2_base64($the_002_file, $execu_model_name) {
 	// This function takes $a_002_file and $model_app_name; 
 	// and make the plot,
 	global $BMDS_version;
-	switch ($model_app_name) {
+	switch ($execu_model_name) {
     	case "exponential":
         	$execution = shell_exec('.\\'. $BMDS_version. '\\00expo .\\Temp_BMDS_files\\'. $the_002_file);
         	break;
