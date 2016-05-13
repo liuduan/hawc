@@ -1,0 +1,455 @@
+<!-- This file is used to test the .post() function as a local file
+The target is http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/ajaxll.php.
+It works very well.
+This line in remote PHP file is required to allow post access in Amazon Web Services:
+header("Access-Control-Allow-Origin: *");
+
+Susan Liu (LIU Zhonghong) helped to figure out.
+-- Duan Liu, 2016-Feb
+-->
+<html>
+<head>
+<title>Dorman 2008 Verification</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+<style>
+
+
+h2 {
+    color: maroon;
+    margin-left: 40px;
+	font-family:Arial, "Helvetica", sans-serif;
+}
+
+@font-face {
+    font-family: 'socialfont';
+    src: url('http://mediaashley.com/MyFont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body {
+  background: #ddd;
+	/*width: 150%;*/
+  margin: 30px;
+}
+
+button {
+	width:130px;
+  height:60px;
+  /*display:inline-block;*/
+  font-family:Arial, "Helvetica", sans-serif;
+  font-size:16px;
+  font-weight:bold;
+  color:#fff;
+  text-decoration:none;
+  text-transform:uppercase;
+  text-align:top; /*center;*/
+  text-shadow:1px 1px 0px #07526e;
+  padding-top:6px;
+  margin-left:auto;
+  margin-right:auto;
+  left:30px;
+  position:relative;
+  /*cursor:pointer;*/
+  border: none;
+  background: #109bce;
+  background-image: linear-gradient(bottom, rgb(14,137,182) 0%, rgb(22,179,236) 100%);
+  border-radius: 5px;
+  box-shadow: inset 0px 1px 0px #2ab7ec, 0px 5px 0px 0px #07526e, 0px 10px 5px #999;
+}
+
+select {
+	width:330px;
+  height:30px;
+  /*display:inline-block;*/
+  font-family:Arial, "Helvetica", sans-serif;
+  font-size:16px;
+  font-weight:bold;
+  color:#fff;
+  text-decoration:none;
+  text-transform:uppercase;
+  text-align:left;
+  text-shadow:1px 1px 0px #07526e;
+
+  margin-left:auto;
+  margin-right:auto;
+border: 2px;
+border-style: inset;
+border-color:#0000CC;
+  position:relative;
+  /*cursor:pointer;*/
+  background: #109bce;
+  background-image: linear-gradient(bottom, rgb(14,137,182) 0%, rgb(22,179,236) 100%);
+}
+
+	#wrapper h2{
+font:normal 40pt Arial;
+color:#FFFFFF;
+text-shadow: 0 1px 0 #ccc,
+0 2px 0 #c9c9c9,
+0 3px 0 #bbb,
+0 4px 0 #b9b9b9,
+0 5px 0 #aaa,
+0 6px 1px rgba(0,0,0,.1),
+0 0 5px rgba(0,0,0,.1),
+0 1px 3px rgba(0,0,0,.3),
+0 3px 5px rgba(0,0,0,.2),
+0 5px 10px rgba(0,0,0,.25),
+0 10px 10px rgba(0,0,0,.2),
+0 20px 20px rgba(0,0,0,.15);
+}
+
+	Deep_maroon{
+font:normal 16pt Arial;
+color:	#842B00;
+font-weight:bold;
+}
+
+pre {
+    white-space: pre-wrap;       /* CSS 3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+</style>
+
+
+</head>
+
+<body>
+
+<div id="wrapper">
+<center>
+<br><h2>Dorman 2008 Verification</h2>
+<br><center> 
+
+<button id="BMDS_run_diverge" class="btn btn-large btn-primary">Run BMDS 2.601</button></center>
+
+
+<tag id = "selection_tag">
+<Deep_maroon id="please">Please Select a Model Result:  </Deep_maroon>
+<select id= "Model_number">
+  <option value= 0 >1. Dichotomous Hill Model</option>
+  <option value= 1 >2. Gamma Model</option>
+  <option value= 2 >3. Gamma Model with Background Dose</option>
+  <option value= 3 >4. Log Probit Model with Background Dose</option>
+  <option value= 4 >5. Logist</option>
+  <option value= 5 >6. Log Logist</option>
+  <option value= 6 >7. Logist Model with Background Response</option>
+  <option value= 7 >8. Multistage 2d Model</option>
+  <option value= 8 >9. Multistage 3d Model</option>
+  <option value= 9 >10. Multistage Model with Background Dose</option>
+  <option value= 10 >11. Quantal-Linear Models</option>
+  <option value= 11 >12. Log Probit Model</option>
+  <option value= 12 >13. Probit Model</option>
+  <option value= 13 >14. Probit Model with Background Response</option>
+  <option value= 14 >15. Weibull and Quantal Linear Model</option>
+  <option value= 15 >16. Weibull Model with Background Dose</option>
+</select>
+
+
+<button id = "reload_button">Reset</button>
+
+
+<br></tag>
+
+<br><br></center>
+</div>
+
+
+<div id="show_content" style="width: 95%; position: relative; left:1%; right:1%; border:30px; padding:20px;">
+	<pre style="width: 95%; position: relative; left:1%; right:1%; border:30px; padding:20px;
+    background: #D0D0D0">
+	Data from Dorman et al. 2008 is used to test the BMDS calculation of BMDS.
+	Because EPA on longer support BMDS running on a UNIX system, a BMDS Windows server has been setup to support online service of BMDS expecially for HAWC site.
+	The Windows server is a virtual machine running on Amazon free of charge for the first year. The address is: 
+	http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php, or 
+	http://52.24.231.219/BMDS_execution.php
+	This site is running BMDS 2.601, and could run other versions in the future. 
+    
+	Data from Dorman et al. 2008 is used to test the BMDS calculation of BMDS. The data tested on this page is from figure 2, Dorsal meatus I, 4 days. The tested models are: Gamma, Dichotomous-Hill, Logistic, LogLogistic, Probit, LogProbit, Weibull, Multistage 3°, Multistage 2°, Quantal-Linear, Gamma-BgDose, Logistic-BgResponse, LogProbit-BgDose, Probit-BgResponse, Weibull-BgDose, Multistage-BgDose 3°.
+    
+	The inpute data in .(D) file are integrated into an object look like this:
+
+{
+    "options": {
+        "bmds_version": "2.60", 
+        "generate_emf": true,  
+    },
+    "runs": [
+        {"id":31, "model_app_name": "logist",
+        	"dfile":"LogLogistic ....."},
+        {"id":32, "model_app_name": "exponential_M2",
+            "dfile":"exponential ....},
+        {"id":33, "model_app_name": "exponential_M3",
+            "dfile":"exponential ....},
+        {"id":34, "model_app_name": "exponential_M4",
+            "dfile":"exponential ....},
+        {"id":35, "model_app_name": "exponential_M5",
+            "dfile":"exponential ....},
+        {"id":36, "model_app_name": "gamma",
+            "dfile":"gamma ....},
+ 
+        ....
+    ]
+}   
+
+
+===================================================================
+	The output object look like this:
+[
+    {"id":31, "model_app_name": "logist",
+    	"OUT_file_str":"LogLogistic ..... ",
+        "base64_emf_str": " ...... "}  // corrected.
+    }
+        
+    {"id":32, "model_app_name": "exponential_M2",
+        "OUT_file_str": "exponential ..... ",
+        "base64_emf_str": "..... "               
+    }
+    {"id":33, "model_app_name": "exponential_M3",
+        "OUT_file_str": "exponential ..... ",
+        "base64_emf_str": "..... "               
+    }
+    {"id":32, "model_app_name": "exponential_M4",
+        "OUT_file_str": "exponential ..... ",
+        "base64_emf_str": "..... "               
+    }
+    {"id":32, "model_app_name": "exponential_M5",
+        "OUT_file_str": "exponential ..... ",
+        "base64_emf_str": "..... "               
+    }
+    {"id":32, "model_app_name": "gamma",
+        "OUT_file_str": "exponential ..... ",
+        "base64_emf_str": "..... "               
+    }
+	....
+    
+]
+    
+    </pre>
+    </div>
+    
+
+
+<div id='ct'></div>
+
+<div id='icon_here'></div>
+
+</body>
+</html>
+
+<script type='text/javascript'>
+
+var bmds_version = "BMDS2601";
+var emf_YN = "True";
+var Model_number = 0;
+var bg_color = "light_green";
+
+$('#Model_number').on('change', function() {
+	Model_number = Number($('#Model_number').val());
+	// bmds_version = $('#BMDS_version').val();
+   	// alert('Model_number = ' + Model_number); 
+	$("#show_content").css("background-color","#C4E1E1");
+	$("#show_content").html('Great. Values extracted from returned jSon string. ' +
+				// "<br> This should work: "+ Object.getOwnPropertyNames(obj.models[0].id_content(0)) ); //+
+				"<br>Results for one of the models: <br><br>" + 
+				// Model_number +
+				"ID: " + obj[Model_number].id.toString() +"<br>" +
+				"Model name: " + obj[Model_number].model_app_name.toString() +"<br>" +
+				"<br>Resulting .OUT file: <pre>" + obj[Model_number].OUT_file_str.toString() +"</pre>" +
+				"<br>EMF file link: <a href='http://" + obj[Model_number].emf_link.toString() +
+				"'>" + obj[Model_number].emf_link.toString() + "</a><br>" +
+				"<br>Base64 decoded .emf file: <br>" + 
+				obj[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
+				obj[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
+				"");		
+	switch (bg_color) {
+    	case "light_blue":
+        	$("#show_content").css("background-color","#C4E1FF");
+			bg_color = "light_green";
+        	break;
+			
+		case "light_green":
+        	$("#show_content").css("background-color","#CEFFCE");
+			bg_color = "light_maroon";
+        	break;
+			
+    	case "light_maroon":
+        	$("#show_content").css("background-color","#FFE6D9");
+			bg_color = "light_blue";
+        	break;
+		}
+	// alert('Model_number. = ' + Model_number); 
+});
+
+$('#emf_selection').on('change', function() {
+	emf_YN = $('#emf_selection').val();
+   	alert('emf_YN = ' + emf_YN); 
+});
+
+
+
+$(document).ready(function(){
+	
+$("#selection_tag").hide();	
+	
+$("#BMDS_run_diverge").click(function(){
+	// alert("emf_YN: " + emf_YN + '; bmds_version = ' + bmds_version);
+	
+	
+var submittion_str = {
+    "options": {
+        "bmds_version": bmds_version, 
+        "emf_YN": emf_YN
+    },
+    "runs": 
+[
+	{"id":29, "model_app_name":"DichoHill",
+	"dfile":"Dichotomous-Hill \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-DichHill-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
+	},
+    {"id":30, "model_app_name":"gamma",
+	"dfile":"Gamma \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Gamma-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
+	},
+	{"id":31, "model_app_name":"Gamma_bgdose",
+	"dfile":"Gamma-BgDose \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-GammaBgDose-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
+	},	
+	{"id":32, "model_app_name":"log_probit_bg_dose",
+	"dfile":"LogProbit-BgDose \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-LogProbBgDose-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},	
+	{"id":33, "model_app_name":"logist",
+	"dfile":"Logistic \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Logistic-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 0 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
+	},
+	{"id":34, "model_app_name":"logist",
+	"dfile":"LogLogistic \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-LogLogistic-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
+	},
+	{"id":35, "model_app_name":"logist_bg_response",
+	"dfile":"Logistic-BgResponse \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-LogBgResp-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 0 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":36, "model_app_name":"multistage",
+	"dfile":"Multistage \nBMDS_Model_Run \n1-2008-AcroleinInhalation.dax \n1-2008-Acrolein_Inhalation-Multi2-10Pct-4d.out \n4 2  \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":37, "model_app_name":"multistage",
+	"dfile":"Multistage \nBMDS_Model_Run \n1-2008-AcroleinInhalation.dax \n1-2008-Acrolein_Inhalation-Multi3-10Pct-4d.out \n4 3  \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":38, "model_app_name":"multistage_bg_dose",
+	"dfile":"Multistage-BgDose \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-MultiBgDose3-10Pct-4d.out \n4 3  \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+
+    {"id":39, "model_app_name":"probit",
+	"dfile":"LogProbit \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-LogProbit-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":40, "model_app_name":"probit",
+	"dfile":"Probit \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Probit-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 0 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+    {"id":41, "model_app_name":"probit_bg_response",
+	"dfile":"Probit-BgResponse \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-ProbitBgResp-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 0 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},	
+    {"id":42, "model_app_name":"weibull",
+	"dfile":"Weibull \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Weibull-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":43, "model_app_name":"weibull",
+	"dfile":"Quantal-Linear \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Quantal-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 1 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+    {"id":44, "model_app_name":"weibull_bg_dose",
+	"dfile":"Weibull-BgDose \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-WeibullBgDose-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	}		
+]
+}
+	
+	
+	
+
+
+	
+	seconds_elapse();
+	$.ajax({url: "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php", 
+		data: {data: JSON.stringify(submittion_str)},
+		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
+		contentType: "text/plain",
+		method: "POST",
+		// dataType: "application/json",	// The data type to receive. datatype : "application/json",
+		cache: false, // The browser not to store content
+ 		
+
+		success: function(data){
+			clearTimeout(seconds_100);
+			$("#show_content").html("Received data: <br>.." + data + ".. <br>..");
+			
+			obj = JSON.parse(data);
+			
+			$("#show_content").html('json conversion works. <br><br><br>' + data + '<br>' + 
+				obj[Model_number].model_app_name);
+			$("#show_content").html('json conversion works 2. <br><br><br>' + data + '<br>"<pre>"' + 
+				obj[Model_number].OUT_file_str);
+			// var id_content_arr = obj.models[0].id_content.
+			
+			// $("#show_content").html('Great, obj.models.toString(): <br>' + id_content_arr);
+			$("#show_content").html('Great. Values extracted from returned jSon string. ' +
+				// "<br> This should work: "+ Object.getOwnPropertyNames(obj.models[0].id_content(0)) ); //+
+				"<br>Results for one of the models: <br><br>" + 
+				"ID: " + obj[Model_number].id.toString() +"<br>" +
+				"Model name: " + obj[Model_number].model_app_name.toString() +"<br>" +
+				"<br>Resulting .OUT file: <pre>" + obj[Model_number].OUT_file_str.toString() +"</pre>" +
+				"<br>EMF file link: <a href='http://" + obj[Model_number].emf_link.toString() +
+				"'>" + obj[Model_number].emf_link.toString() + "</a><br>" +
+				"<br>Base64 decoded .emf file: <br>" + 
+				obj[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
+				obj[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
+				"");		
+			$("#show_content").css("background-color","#C4E1FF");
+			$("#BMDS_run_diverge").hide();
+			$("#selection_tag").show();
+			
+    	}
+	});
+})
+
+}
+)
+
+</script>
+
+
+<script type="text/javascript">
+
+
+
+var i = 0;
+var seconds_100;
+
+function seconds_elapse(){
+	$("#show_content").html("<br><center><Deep_maroon>This process takes about 15 seconds. <br><br>" + 
+		"Time: </Deep_maroon><font size='6' color='blue' face='verdana'><b> &nbsp&nbsp" + i + "&nbsp&nbsp</font></b>   <Deep_maroon>Seconds.</Deep_maroon></center>");
+	i = i + 1;
+	if (i > 100){
+		$("#show_content").html("Error, please try to reload, or report the problem.");
+	}
+	seconds_100 = setTimeout("display_time()",1000);
+}
+
+function display_time() {
+	seconds_elapse()
+}
+
+$("#reload_button").click(function(e){location.reload(); })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
