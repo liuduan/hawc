@@ -25,7 +25,72 @@ header("Access-Control-Allow-Origin: *");
 	-- Duan Liu, 2016-Feb 
 */
 
-// echo "Hello, here is from server:..";
+// Turn off output buffering
+ini_set('output_buffering', 'off');
+// Turn off PHP output compression
+ini_set('zlib.output_compression', false);
+         
+//Flush (send) the output buffer and turn off output buffering
+//ob_end_flush();
+while (@ob_end_flush());
+         
+// Implicitly flush the buffer(s)
+ini_set('implicit_flush', true);
+ob_implicit_flush(true);
+ 
+//prevent apache from buffering it for deflate/gzip
+header("Content-type: text/plain");
+header('Cache-Control: no-cache'); // recommended to prevent caching of event data.
+ 
+for($i = 0; $i < 1000; $i++)
+{
+echo ' ';
+}
+         
+ob_flush();
+flush();
+ 
+/// Now start the program output
+ 
+echo "Program Output";
+ 
+ob_flush();
+flush();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ob_end_flush();
+
+# CODE THAT NEEDS IMMEDIATE FLUSHING
+ob_end_flush();
+echo "Hello, here is from server:...1 ";
+// ob_flush();
+// flush();
+sleep(10);
+// ob_start();
+
 
 // file operation.
 $dir = ".\\Temp_BMDS_files";
@@ -56,6 +121,19 @@ for ($i = 0; $i < count($files); ++$i) {
 // receiving post input.
 $from_input = file_get_contents('php://input'); 
 // echo '$from_input'. $from_input;
+
+// Get storage number
+$BMDS_Service_Number = "Amazon". date('YFd_'). Serial_number(); 
+
+ob_end_flush();
+
+# CODE THAT NEEDS IMMEDIATE FLUSHING
+// echo "{\"BMDS_Service_Number\": \"". $BMDS_Service_Number."\"}";
+ob_flush();
+flush();
+ob_start();
+
+$storage_file = $BMDS_Service_Number. ".txt";
 
 // Transfer post string into jSon string, change %22, %3A signs.
 $from_input = PostString_to_jsonString($from_input);
@@ -166,9 +244,20 @@ $output_json = json_encode($output_ar);
 
 
 
-echo $output_json;
+// echo $output_json;
 
+// echo '<br>$storage_file = '. $storage_file. '<br>';
 
+$storage_str = "{\"". $storage_file. "\": ". $output_json. "}"; 
+$storage_str = "{\"BMDS_Service_Number\": \"". $BMDS_Service_Number. "\", \"BMDS_Results\": ". $output_json. "}"; 
+// $storage_str = $output_json; 
+		# Save file to disk
+$storage_file = '.\\Temp_BMDS_files\\'.$storage_file;
+		
+file_put_contents($storage_file, $storage_str);
+// $storage_file = $serial
+
+// =====================================================================================================
 
 function PostString_to_jsonString($from_input) {
 	// This function take $from_input = file_get_contents('php://input'); 
