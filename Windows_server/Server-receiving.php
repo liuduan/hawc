@@ -1,64 +1,37 @@
 <?php
-// header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: *");
 
 
-/*
-$multiplier = 4;
-$size = 1024 * $multiplier;
-for($i = 1; $i <= $size; $i++) {
-	echo ".";
+
+
+
+
+
+// receiving post input.
+$from_input = file_get_contents('php://input'); 
+// echo '$from_input'. $from_input;
+
+// echo "{\"BMDS_Service_Number\": \"Hello World\"}";
+// exit;
+
+
+// Get storage number
+$BMDS_Service_Number = "Amazon". date('YFd_'). Serial_number(); 
+
+echo "{\"BMDS_Service_Number\": \"". $BMDS_Service_Number."\"}";
+
+$data_file_name = '.\\Temp_BMDS_files\\'. $BMDS_Service_Number. "_data.txt";
+
+file_put_contents($data_file_name, $from_input);
+
+function Serial_number() {
+	// This function takes a serial number from ./Serial.txt; 
+	// and it will add a number each time of access,
+	// after 1000, it will reset to 1.
+    $Serial_number = file_get_contents('.\\Serial.txt');
+	if ($Serial_number > 3000){$Serial_number = $Serial_number - 1000;}
+	file_put_contents('.\\Serial.txt', ($Serial_number + 1));
+	return $Serial_number;
 }
-flush();
-for($i = 1; $i <= $size; $i++) {
-	echo ".";
-}
-echo '<br>Hello World<br>';
-sleep(5);
-for($i = 1; $i <= $size; $i++) {
-	echo ".";
-}
-echo '<br>Hello World, spleeped 5 seconds. <br>';
-*/
-
-
-
-
-
-
-
-// Turn off output buffering
-ini_set('output_buffering', 'off');
-// Turn off PHP output compression
-ini_set('zlib.output_compression', false);
-         
-//Flush (send) the output buffer and turn off output buffering
-//ob_end_flush();
-while (@ob_end_flush());
-         
-// Implicitly flush the buffer(s)
-ini_set('implicit_flush', true);
-ob_implicit_flush(true);
- 
-//prevent apache from buffering it for deflate/gzip
-header("Content-type: text/plain");
-header('Cache-Control: no-cache'); // recommended to prevent caching of event data.
- 
-for($i = 0; $i < 1000; $i++)
-{
-echo ' ';
-}
-         
-// ob_flush();
-flush();
- 
-/// Now start the program output
- 
-echo '<br>Program Output<br>';
-sleep(5);
-echo "Program Output after sleep 5";
- 
-// ob_flush();
-flush();
-
  
 ?>

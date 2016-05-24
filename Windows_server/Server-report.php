@@ -1,12 +1,13 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 /*	The purpose of this file is to run BMDS in a Windows server. The .(D) files are received from the .post() function on a client web page.
-	The client side PC testing file is ./Local_PC_testing_files/BMDS-Server-Tester.html.
+	The client side PC testing file is ./Local_PC_testing_files/Susan_helped-2.html.
      This line in remote PHP file is required to allow post access in Amazon Web Services:
 header("Access-Control-Allow-Origin: *");
 	The json receiving is working with plain text transfer. After that, signs like %22%2C are replaced by (",), So it will fit into json_decode() in PHP. 
 
-	The output file is in the same folder as the input file, and with the same file nanme, but the extension is different. The output file extention is .OUT;
+	The output file is in the same folder as the input file, and with the same file nanme, 
+	but the extension is different. The output file extention is .OUT;
 
 	Susan Liu (LIU Zhonghong) helped to figure out json post.
 	==========================
@@ -21,196 +22,37 @@ header("Access-Control-Allow-Origin: *");
     For HAWC site, the changes are embedded in the ./project/templates/bmd/bmd_session_form.html, and /Local_PC_testing_files/Susan_helped_POST.html is for POST testing. The Windows server file is /Windows_server/BMDS_execution.php.  
 
 
-	-- Duan Liu, 2016-May
+	-- Duan Liu, 2016-Feb 
 */
 
-?>
+$BMDS_Service_Number = file_get_contents('php://input'); 
+// echo '$BMDS_Service_Number: '. $BMDS_Service_Number. '<br>';
 
+$storage_file = $BMDS_Service_Number. "_rsults.txt";
+$storage_file = '.\\Temp_BMDS_files\\'.$storage_file;
+$storage_file_size = filesize($storage_file);
 
-<?php
-print '
+if ($storage_file_size > 2000) {
+	$results = file_get_contents($storage_file);
+	echo $results;
 
-<html>
-<head>
-
-<title>Server Tester</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-
-<style>
-
-
-h2 {
-    color: maroon;
-    margin-left: 40px;
-	font-family:Arial, "Helvetica", sans-serif;
-}
-
-@font-face {
-    font-family: "socialfont";
-    src: url("http://mediaashley.com/MyFont.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-body {
-  background: #ddd;
-  margin: 30px;
+}else {
+    echo "Not ready. ";
+  	echo $storage_file . ': ' . $storage_file_size . ' bytes';
 }
 
 
-select {
-	width:330px;
-  height:30px;
-  /*display:inline-block;*/
-  font-family:Arial, "Helvetica", sans-serif;
-  font-size:16px;
-  font-weight:bold;
-  color:#fff;
-  text-decoration:none;
-  text-transform:uppercase;
-  text-align:left;
-  text-shadow:1px 1px 0px #07526e;
-
-  margin-left:auto;
-  margin-right:auto;
-border: 2px;
-border-style: inset;
-border-color:#0000CC;
-  position:relative;
-  /*cursor:pointer;*/
-  background: #109bce;
-  background-image: linear-gradient(bottom, rgb(14,137,182) 0%, rgb(22,179,236) 100%);
-}
-
-	#wrapper h2{
-font:normal 40pt Arial;
-color:#FFFFFF;
-text-shadow: 0 1px 0 #ccc,
-0 2px 0 #c9c9c9,
-0 3px 0 #bbb,
-0 4px 0 #b9b9b9,
-0 5px 0 #aaa,
-0 6px 1px rgba(0,0,0,.1),
-0 0 5px rgba(0,0,0,.1),
-0 1px 3px rgba(0,0,0,.3),
-0 3px 5px rgba(0,0,0,.2),
-0 5px 10px rgba(0,0,0,.25),
-0 10px 10px rgba(0,0,0,.2),
-0 20px 20px rgba(0,0,0,.15);
-}
-
-Deep_maroon{
-	font:normal 16pt Arial;
-	color:	#842B00;
-	font-weight:bold;
-}
-
-
-smaller_font{
-	font:normal 13pt Arial;
-	color:	#030200;
-	font-weight:bold;
-}
-
-
-pre {
-    white-space: pre-wrap;       /* CSS 3 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */
-}
-
-</style>
-
-
-</head>
-
- <body>
-
-<div id="wrapper">
-<center>
-<br><h2>BMDS Windows Server</h2>
-<br><center> 
+exit;
 
 
 
 
-<Deep_maroon id="please">
-<br><br>
-The BMDS Service Number is: <smaller_font>'. $_GET["bsn"]. '</smaller_font><br><br>
-
-
-
-
- </Deep_maroon></tag>
- 
- <div id="show_content" style="width: 95%; position: relative; left:1%; right:1%; border:30px; padding:20px; background-color: #c1c1c1;">
-	</div>
-
-<smaller_font>
-<br>Please do not close this window, and it will be closed automatically after finish.<br><br>
-</smaller_font>
-
-<br>
-
-<br><br></center>
-</div>
-
-
-
-
-</body>
-</html>
-
-
-<script type="text/javascript">
-
-
-
-// ################################## Showing Elapse Time 
-
-var i = 0;
-var seconds_100;
-
-function seconds_elapse(){
-	$("#show_content").html("<br><center><Deep_maroon>This process takes about 15 seconds. <br><br>" + 
-		"Time: </Deep_maroon><font size=6 color=blue face=verdana><b> &nbsp&nbsp" + i + "&nbsp&nbsp</font></b>   <Deep_maroon>Seconds.</Deep_maroon></center>");
-	i = i + 1;
-	if (i > 100){
-		$("#show_content").html("Error, please try to reload, or report the problem.");
-	}
-	seconds_100 = setTimeout("display_time()",1000);
-}
-
-function display_time() {
-	seconds_elapse()
-}
-
-
-window.onload = seconds_elapse();
-</script>';
-
-// echo "  loaded.";
+flush();
+echo 'BMDS started. <br>bsn = '. $_GET["bsn"]. '<br>';
 for ($x = 0; $x <= 800000; $x++) {
-    echo "                                                                                          ";
+    echo "                                                    ";
 } 
-?>
-
-
-
-
-
-
-
-
-
-
-
-
-<?php
-
+echo '<br>Please do not close this window.';
 
 // file operation.
 $dir = ".\\Temp_BMDS_files";
@@ -363,7 +205,7 @@ $output_json = json_encode($output_ar);
 // echo '<br>$storage_file = '. $storage_file. '<br>';
 
 $storage_str = "{\"". $storage_file. "\": ". $output_json. "}"; 
-$storage_str = "{\"BMDS_Service_Number\": \"". $_GET["bsn"]. "\", \"BMDS_Results\": ". $output_json. "}"; 
+$storage_str = "{\"BMDS_Service_Number\": \"". $BMDS_Service_Number. "\", \"BMDS_Results\": ". $output_json. "}"; 
 // $storage_str = $output_json; 
 		# Save file to disk
 $storage_file = '.\\Temp_BMDS_files\\'.$storage_file;
@@ -372,7 +214,7 @@ file_put_contents($storage_file, $storage_str);
 // $storage_file = $serial
 
 echo '<br> BMDS Job Finished.';
-
+// echo '<script type = "text/javascript"> window.close();</script>';
 
 // =====================================================================================================
 

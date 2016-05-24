@@ -1,15 +1,16 @@
-<!-- This file is used to test the .post() function as a local file
-The target is http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/ajaxll.php.
-It works very well.
-This line in remote PHP file is required to allow post access in Amazon Web Services:
+<!-- This file is used to test BMDS Windows server, which is a virtual machine running on Amazon. The address is: 
+	http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php, or 
+	http://52.24.231.219/BMDS_execution.php 
+	It works very well.
+	This line in remote PHP file is required to allow post access in Amazon Web Services:
 header("Access-Control-Allow-Origin: *");
 
-Susan Liu (LIU Zhonghong) helped to figure out.
--- Duan Liu, 2016-Feb
+	Susan Liu (LIU Zhonghong) helped to figure out.
+-- Duan Liu, 2016-May
 -->
 <html>
 <head>
-<title>BMDS Windows Server Test</title>
+<title>Server Tester</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 
 <style>
@@ -31,7 +32,6 @@ h2 {
 
 body {
   background: #ddd;
-	/*width: 150%;*/
   margin: 30px;
 }
 
@@ -107,6 +107,14 @@ color:	#842B00;
 font-weight:bold;
 }
 
+pre {
+    white-space: pre-wrap;       /* CSS 3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
 </style>
 
 
@@ -116,41 +124,31 @@ font-weight:bold;
 
 <div id="wrapper">
 <center>
-<br><h2>BMDS Windows Server Test</h2>
+<br><h2>BMDS Windows Server</h2>
 <br><center> 
+
 <button id="BMDS_run_diverge" class="btn btn-large btn-primary">Run BMDS 2.601</button></center>
-<br>
 
 
 <tag id = "selection_tag">
 <Deep_maroon id="please">Please Select a Model Result:  </Deep_maroon>
 <select id= "Model_number">
-  <option value= 0 >1. Multistage Cancer Model</option>
-  <option value= 1 >2. Cancer Model with Background Dose</option>
-  <option value= 2 >3. Dichotomous Hill Model</option>
-  <option value= 3 >4. Exponential Model M2</option>
-  <option value= 4 >5. Exponential Model M3</option>
-  <option value= 5 >6. Exponential Model M4</option>
-  <option value= 6 >7. Exponential Model M5</option>
-  <option value= 7 >8. Gamma Model</option>
-  <option value= 8 >9. Gamma Model with Background Dose</option>
-  <option value= 9 >10. Hill Model</option>
-  <option value= 10 >11. Log Probit Model with Background Dose</option>
-  <option value= 11 >12. Logist and Log Logist Model</option>
-  <option value= 12 >13. Logist Model with Background Response</option>
-  <option value= 13 >14. Multiple Tumor Analysis Combined Model</option>
-  <option value= 14 >15. Multistage Model</option>
-  <option value= 15 >16. Multistage Model with Background Dose</option>
-  <option value= 16 >17. NCTR Model</option>
-  <option value= 17 >18. Nlogistic Model</option>
-  <option value= 18 >19. Plynomial and Linear Models</option>
-  <option value= 19 >20. Power Model</option>
-  <option value= 20 >21. Probit and Log Probit Model</option>
-  <option value= 21 >22. Probit Model with Background Response</option>
-  
-  <option value= 22 >23. RaiVR Model</option>
-  <option value= 23 >24. Weibull and Quantal Linear Model</option>
-  <option value= 24 >25. Weibull Model with Background Dose</option>
+  <option value= 0 >1. Dichotomous Hill Model</option>
+  <option value= 1 >2. Gamma Model</option>
+  <option value= 2 >3. Gamma Model with Background Dose</option>
+  <option value= 3 >4. Log Probit Model with Background Dose</option>
+  <option value= 4 >5. Logist</option>
+  <option value= 5 >6. Log Logist</option>
+  <option value= 6 >7. Logist Model with Background Response</option>
+  <option value= 7 >8. Multistage 2d Model</option>
+  <option value= 8 >9. Multistage 3d Model</option>
+  <option value= 9 >10. Multistage Model with Background Dose</option>
+  <option value= 10 >11. Quantal-Linear Models</option>
+  <option value= 11 >12. Log Probit Model</option>
+  <option value= 12 >13. Probit Model</option>
+  <option value= 13 >14. Probit Model with Background Response</option>
+  <option value= 14 >15. Weibull and Quantal Linear Model</option>
+  <option value= 15 >16. Weibull Model with Background Dose</option>
 </select>
 
 
@@ -166,14 +164,13 @@ font-weight:bold;
 <div id="show_content" style="width: 95%; position: relative; left:1%; right:1%; border:30px; padding:20px;">
 	<pre style="width: 95%; position: relative; left:1%; right:1%; border:30px; padding:20px;
     background: #D0D0D0">
-	Because EPA on longer support BMDS running on a UNIX system, a BMDS Windows server has been setup to 
- support online service of BMDS expecially for HAWC site.
-	The Windows server is a virtual machine running on Amazon free of charge for the first year. The address 
-is: 
+	Because EPA on longer support BMDS running on a UNIX system, a BMDS Windows server has been setup to support online service of BMDS expecially for HAWC site.
+	The Windows server is a virtual machine running on Amazon free of charge for the first year. The address is: 
 	http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php, or 
 	http://52.24.231.219/BMDS_execution.php
-	This site is running BMDS 2.601, and could run other versions in the future. The inpute data in .(D) file 
-are integrated into an object look like this:
+	This site is running BMDS 2.601, and could run other versions in the future. 
+    
+	The inpute data in .(D) file are integrated into an object look like this:
 
 {
     "options": {
@@ -201,6 +198,7 @@ are integrated into an object look like this:
 
 ===================================================================
 	The output object look like this:
+{"BMDS_Service_Number": "xxx", "Results": 
 [
     {"id":31, "model_app_name": "logist",
     	"OUT_file_str":"LogLogistic ..... ",
@@ -229,7 +227,7 @@ are integrated into an object look like this:
     }
 	....
     
-]
+]}
     
     </pre>
     </div>
@@ -246,7 +244,7 @@ are integrated into an object look like this:
 <script type='text/javascript'>
 
 var bmds_version = "BMDS2601";
-var emf_YN = "False"; //"True";
+var emf_YN = "True";
 var Model_number = 0;
 var bg_color = "light_green";
 
@@ -259,14 +257,14 @@ $('#Model_number').on('change', function() {
 				// "<br> This should work: "+ Object.getOwnPropertyNames(obj.models[0].id_content(0)) ); //+
 				"<br>Results for one of the models: <br><br>" + 
 				// Model_number +
-				"ID: " + obj[Model_number].id.toString() +"<br>" +
-				"Model name: " + obj[Model_number].model_app_name.toString() +"<br>" +
-				"<br>Resulting .OUT file: <pre>" + obj[Model_number].OUT_file_str.toString() +"</pre>" +
-				"<br>EMF file link: <a href='http://" + obj[Model_number].emf_link.toString() +
-				"'>" + obj[Model_number].emf_link.toString() + "</a><br>" +
+				"ID: " + obj.BMDS_Results[Model_number].id.toString() +"<br>" +
+				"Model name: " + obj.BMDS_Results[Model_number].model_app_name.toString() +"<br>" +
+				"<br>Resulting .OUT file: <pre>" + obj.BMDS_Results[Model_number].OUT_file_str.toString() +"</pre>" +
+				"<br>EMF file link: <a href='http://" + obj.BMDS_Results[Model_number].emf_link.toString() +
+				"'>" + obj.BMDS_Results[Model_number].emf_link.toString() + "</a><br>" +
 				"<br>Base64 decoded .emf file: <br>" + 
-				obj[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
-				obj[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
+				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
+				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
 				"");		
 	switch (bg_color) {
     	case "light_blue":
@@ -299,7 +297,7 @@ $(document).ready(function(){
 $("#selection_tag").hide();	
 	
 $("#BMDS_run_diverge").click(function(){
-	alert("clicked");
+	// alert("emf_YN: " + emf_YN + '; bmds_version = ' + bmds_version);
 	
 	
 var submittion_str = {
@@ -309,94 +307,106 @@ var submittion_str = {
     },
     "runs": 
 [
-	{"id":27, "model_app_name":"cancer",
-	"dfile":"Cancer \nBMDS_Model_Run \n Cancer.(d) \n Cancer.out \n5 1  \n500 1.00E-08 1.00E-08 0 1 1 0 0 \n0.1000 0 0.95 \n-9999 -9999 \n0 \n-9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
-	},	
-	{"id":28, "model_app_name":"cancer_bg_dose",
-	"dfile":"Multistage-Cancer-BgDose \nBMDS_Model_Run \nMultistage-Cancer-BgDose.(d) \nMultistage-Cancer-BgDose.out \n5 1  \n500 1.00E-08 1.00E-08 0 1 1 0 0 \n0.1000 0 0.95 \n-9999 -9999 \n0 \n-9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
-	},
 	{"id":29, "model_app_name":"DichoHill",
-	"dfile":"Dichotomous-Hill \nBMDS_Model_Run \nDichotomous-Hill.(d) \nDichotomous-Hill.out \n5 \n500 1.00E-08 1.00E-08 0 1 1 0 0 \n0.1000 0 0.95 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
+	"dfile":"Dichotomous-Hill \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-DichHill-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
 	},
-	{"id":30, "model_app_name":"exponential_M2",
-	"dfile":"Exponential\nBMDS Model Run\nExponential.(D)\nExponential.out\n1 4 -1 1111 14 0 1\n500 0.00000001 0.00000001 0 1 1 0\n2 0.05 1 0.95\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56"
+    {"id":30, "model_app_name":"gamma",
+	"dfile":"Gamma \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Gamma-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
 	},
-	{"id":31, "model_app_name":"exponential_M3",
-	"dfile":"Exponential\nBMDS Model Run\nExponential.(D)\nExponential.out\n1 4 -1 1111 14 0 1\n500 0.00000001 0.00000001 0 1 1 0\n2 0.05 1 0.95\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56"
-	},
-	{"id":32, "model_app_name":"exponential_M4",
-	"dfile":"Exponential\nBMDS Model Run\nExponential.(D)\nExponential.out\n1 4 -1 1111 14 0 1\n500 0.00000001 0.00000001 0 1 1 0\n2 0.05 1 0.95\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56"
-	},
-	{"id":33, "model_app_name":"exponential_M5",
-	"dfile":"Exponential\nBMDS Model Run\nExponential.(D)\nExponential.out\n1 4 -1 1111 14 0 1\n500 0.00000001 0.00000001 0 1 1 0\n2 0.05 1 0.95\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56"
-	},
-    {"id":34, "model_app_name":"gamma",
-	"dfile":"Gamma \nBMDS_Model_Run \ngamma.(d) \ngamma.out \n5 \n500 1.00E-08 1.00E-08 0 1 1 0 0 \n0.01 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
-	},
-	{"id":35, "model_app_name":"Gamma_bgdose",
-	"dfile":"Gamma-BgDose \nBMDS_Model_Run \nGamma-BgDose.(d) \nGamma-BgDose.out \n5 \n500 1.00E-08 1.00E-08 0 1 1 0 0 \n0.1000 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
+	{"id":31, "model_app_name":"Gamma_bgdose",
+	"dfile":"Gamma-BgDose \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-GammaBgDose-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
 	},	
-    {"id":36, "model_app_name":"hill",
-	"dfile":"Hill\nBMDS Model Run\nHill.(D)\nHill.OUT\n1 4 0\n500 0.00000001 0.00000001 0 1 1 0 0\n2 0.05 0 0.95\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56\n"
+	{"id":32, "model_app_name":"log_probit_bg_dose",
+	"dfile":"LogProbit-BgDose \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-LogProbBgDose-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
 	},	
-	{"id":37, "model_app_name":"log_probit_bg_dose",
-	"dfile":"LogProbit-BgDose \nBMDS_Model_Run \nLogProbit-BgDose.(d) \nLogProbit-BgDose.out \n5 \n500 1.00E-08 1.00E-08 0 1 0 1 0 0 \n0.1000 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
+	{"id":33, "model_app_name":"logist",
+	"dfile":"Logistic \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Logistic-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 0 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
+	},
+	{"id":34, "model_app_name":"logist",
+	"dfile":"LogLogistic \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-LogLogistic-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"	
+	},
+	{"id":35, "model_app_name":"logist_bg_response",
+	"dfile":"Logistic-BgResponse \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-LogBgResp-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 0 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":36, "model_app_name":"multistage",
+	"dfile":"Multistage \nBMDS_Model_Run \n1-2008-AcroleinInhalation.dax \n1-2008-Acrolein_Inhalation-Multi2-10Pct-4d.out \n4 2  \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":37, "model_app_name":"multistage",
+	"dfile":"Multistage \nBMDS_Model_Run \n1-2008-AcroleinInhalation.dax \n1-2008-Acrolein_Inhalation-Multi3-10Pct-4d.out \n4 3  \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":38, "model_app_name":"multistage_bg_dose",
+	"dfile":"Multistage-BgDose \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-MultiBgDose3-10Pct-4d.out \n4 3  \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+
+    {"id":39, "model_app_name":"probit",
+	"dfile":"LogProbit \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-LogProbit-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+	{"id":40, "model_app_name":"probit",
+	"dfile":"Probit \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Probit-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 0 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	},
+    {"id":41, "model_app_name":"probit_bg_response",
+	"dfile":"Probit-BgResponse \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-ProbitBgResp-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 0 0 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
 	},	
-	{"id":38, "model_app_name":"logist",
-	"dfile":"LogLogistic\nBMDS_Model_Run\nLogLogistic.(D)\nLogLogistic.out\n5\n250 1e-08 1e-08 0 1 1 1 0 0\n0.1 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Incidence NEGATIVE_RESPONSE\n0.000000 0 20\n50.000000 0 20\n150.000000 3 17\n250.000000 6 14\n350.000000 6 14\n"
+    {"id":42, "model_app_name":"weibull",
+	"dfile":"Weibull \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Weibull-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
 	},
-	{"id":39, "model_app_name":"logist_bg_response",
-	"dfile":"Logistic-BgResponse \nBMDS_Model_Run \nLogistic-BgResponse.(d) \nLogistic-BgResponse.out \n5 \n500 1.00E-08 1.00E-08 0 0 0 1 0 0 \n0.1000 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
-	},
-    {"id":40, "model_app_name":"ms_combo",
-	"dfile":"MS_Combo\nBMDS_Model_Run\nMS_Combo.(D)\n3\n5 2 Dichotomous.dax\n500 1.00E-08 1.00E-08 0 1 1 0 0\n0.01 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Effect NEGATIVE_RESPONSE\n0 0 100\n50 5 95\n100 30 70\n150 65 35\n200 90 10\n5 2 Dichotomous.dax\n500 1.00E-08 1.00E-08 0 1 1 0 0\n0.01 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Effect2 NEGATIVE_RESPONSE\n0 5 95\n50 10 90\n100 33 67\n150 67 33\n200 93 7\n5 2 Dichotomous.dax\n500 1.00E-08 1.00E-08 0 1 1 0 0\n0.01 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Effect3 NEGATIVE_RESPONSE\n0 1 99\n50 68 32\n100 78 22\n150 88 12\n200 98 2\n"
-	},
-	{"id":41, "model_app_name":"multistage",
-	"dfile":"Multistage\nBMDS MODEL RUN\nMultistage_test.(D) \nMultistage_test.OUT \n4 \n2 \n 250 2.22045e-16 1.49012e-8 1 1 0 1 1\n0.10 0 0.95\n-9999 -9999 -9999 ...\n0\n-9999 -9999 -9999 ...\nDose Resp NEGATIVE_RESPONSE\n0 3 47\n50 6 44\n100 10 40\n150 19 31\n"
-	},
-	{"id":42, "model_app_name":"multistage_bg_dose",
-	"dfile":"Multistage-Cancer-BgDose \nBMDS_Model_Run \nMultistage-Cancer-BgDose.(d) \nMultistage-Cancer-BgDose.out \n5 2  \n500 1.00E-08 1.00E-08 0 1 1 0 0 \n0.1000 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
-	},
-    {"id":43, "model_app_name":"nctr",
-	"dfile":"NCTR \nBMDS Model Run \nNCTR.(d) \nNCTR.out \n39 4 \n500 1.00E-08 1.00E-08 0 1 1 0 0 0 \n0.1000 0 0.95 1000 0 \n-9999 -9999 -9999 -9999 -9999 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 -9999 \n-9999 -9999 -9999 -9999 \nDose Resp Negative_Resp Covariate Dose_Group \n0 1 15 16 -9999 \n0 1 8 9 -9999 \n0 2 13 15 -9999 \n0 3 11 14 -9999 \n0 3 10 13 -9999 \n0 0 9 9 -9999 \n0 2 8 10 -9999 \n0 2 12 14 -9999 \n0 1 9 10 -9999 \n0 2 9 11 -9999 \n25 4 10 14 -9999 \n25 5 4 9 -9999 \n25 6 8 14 -9999 \n25 2 7 9 -9999 \n25 6 7 13 -9999 \n25 3 9 12 -9999 \n25 1 9 10 -9999 \n25 2 8 10 -9999 \n25 4 7 11 -9999 \n25 3 11 14 -9999 \n50 4 7 11 -9999 \n50 5 6 11 -9999 \n50 5 9 14 -9999 \n50 4 7 11 -9999 \n50 5 5 10 -9999 \n50 4 7 11 -9999 \n50 5 5 10 -9999 \n50 6 9 15 -9999 \n50 2 5 7 -9999 \n50 4 10 14 -9999 \n100 6 5 11 -9999 \n100 6 8 14 -9999 \n100 8 4 12 -9999 \n100 7 6 13 -9999 \n100 8 4 12 -9999 \n100 6 8 14 -9999 \n100 6 5 11 -9999 \n100 5 3 8 -9999 \n100 4 6 10 -9999 \n"
-	},
-    {"id":44, "model_app_name":"nlogist",
-	// "dfile":"Polynomial\nBMDS Model Run\nPoly.(D)\nPoly.OUT\n3\n1 4 0\n500 0.00000001 0.00000001 0 -1 1 0 0\n2 0.05 0 0.95\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56\n"
-	//"dfile":"nLogistic /nBMDS Model Run /nNlogist.(d) /nNlogist.out /n039 4 "
-	"dfile":"nLogistic \nBMDS Model Run \nNlogist.(d) \nNlogist.out \n39 4 \n500 1.00E-08 1.00E-08 0 1 1 0 0 0 \n0.1000 0 0.95 1000 0 \n-9999 -9999 -9999 -9999 -9999 \n-9999 -9999 -9999 -9999 \n0 \n-9999 -9999 -9999 -9999 -9999 \n-9999 -9999 -9999 -9999 \nDose Resp Negative_Resp Covariate Dose_Group \n0 1 15 16 -9999 \n0 1 8 9 -9999 \n0 2 13 15 -9999 \n0 3 11 14 -9999 \n0 3 10 13 -9999 \n0 0 9 9 -9999 \n0 2 8 10 -9999 \n0 2 12 14 -9999 \n0 1 9 10 -9999 \n0 2 9 11 -9999 \n25 4 10 14 -9999 \n25 5 4 9 -9999 \n25 6 8 14 -9999 \n25 2 7 9 -9999 \n25 6 7 13 -9999 \n25 3 9 12 -9999 \n25 1 9 10 -9999 \n25 2 8 10 -9999 \n25 4 7 11 -9999 \n25 3 11 14 -9999 \n50 4 7 11 -9999 \n50 5 6 11 -9999 \n50 5 9 14 -9999 \n50 4 7 11 -9999 \n50 5 5 10 -9999 \n50 4 7 11 -9999 \n50 5 5 10 -9999 \n50 6 9 15 -9999 \n50 2 5 7 -9999 \n50 4 10 14 -9999 \n100 6 5 11 -9999 \n100 6 8 14 -9999 \n100 8 4 12 -9999 \n100 7 6 13 -9999 \n100 8 4 12 -9999 \n100 6 8 14 -9999 \n100 6 5 11 -9999 \n100 5 3 8 -9999 \n100 4 6 10 -9999 \n"
-	},
-    {"id":45, "model_app_name":"poly",
-	"dfile":"Polynomial\nBMDS Model Run\nPoly.(D)\nPoly.OUT\n3\n1 4 0\n500 0.00000001 0.00000001 0 -1 1 0 0\n2 0.05 0 0.95\n-9999 -9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56\n"
-	},	
-    {"id":46, "model_app_name":"power",
-	"dfile":"Power\nBMDS Model Run\nPower.(D)\nPoser.OUT\n1 4 0\n500 0.00000001 0.00000001 0 1 1 0 0\n2 0.05 0 0.95\n-9999 -9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999\nDose N MeanBW SDBW\n0 37 43.85 2.69\n0.1 35 43.51 2.86\n0.5 43 40.04 3\n1.1 42 35.09 2.56\n"
-	},
-    {"id":47, "model_app_name":"probit",
-	"dfile":"Probit\nBMDS MODEL RUN\nProbit.(D)\nProbit.OUT\n4\n250 2.22045e-16 1.49012e-8 1 0 0 1 1 0\n0.10 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Resp NEGATIVE_RESPONSE\n0 3 47\n50 6 44\n100 10 40\n150 19 31\n"
-	},
-    {"id":48, "model_app_name":"probit_bg_response",
-	"dfile":"LogProbit-BgDose \nBMDS_Model_Run \nLogProbit-BgDose.(d) \nLogProbit-BgDose.out \n5 \n500 1.00E-08 1.00E-08 0 1 0 1 0 0 \n0.1000 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Effect NEGATIVE_RESPONSE \n0 0 100 \n50 5 95 \n100 30 70 \n150 65 35 \n200 90 10 \n"
-	},	
-    {"id":49, "model_app_name":"raivr",
-	"dfile":"Rai_and_Van_Ryzin\nBMDS MODEL RUN\nRaiVR.(D)\nRaiVR.OUT\n39 4\n500 1.00E-08 1.00E-08 0 1 1 0 0 0\n0.1000 0 0.95 1000 0\n-9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999\n0\n-9999 -9999 -9999 -9999 -9999\n-9999 -9999 -9999 -9999\nDose Resp Negative_Resp Covariate Dose_Group\n0 1 15 16 -9999\n0 1 8 9 -9999\n0 2 13 15 -9999\n0 3 11 14 -9999\n0 3 10 13 -9999\n0 0 9 9 -9999\n0 2 8 10 -9999\n0 2 12 14 -9999\n0 1 9 10 -9999\n0 2 9 11 -9999\n25 4 10 14 -9999\n25 5 4 9 -9999\n25 6 8 14 -9999\n25 2 7 9 -9999\n25 6 7 13 -9999\n25 3 9 12 -9999\n25 1 9 10 -9999\n25 2 8 10 -9999\n25 4 7 11 -9999\n25 3 11 14 -9999\n50 4 7 11 -9999\n50 5 6 11 -9999\n50 5 9 14 -9999\n50 4 7 11 -9999\n50 5 5 10 -9999\n50 4 7 11 -9999\n50 5 5 10 -9999\n50 6 9 15 -9999\n50 2 5 7 -9999\n50 4 10 14 -9999\n100 6 5 11 -9999\n100 6 8 14 -9999\n100 8 4 12 -9999\n100 7 6 13 -9999\n100 8 4 12 -9999\n100 6 8 14 -9999\n100 6 5 11 -9999\n100 5 3 8 -9999\n100 4 6 10 -9999\n"
-	},	
-    {"id":50, "model_app_name":"weibull",
-	"dfile":"Weibull\nReal Weibull\nWeibull-Di.(D)\nWeibull-Di.OUT\n4\n250 2.22045e-16 1.49012e-8 1 1 1 1 0\n0.10 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Resp NEGATIVE_RESPONSE\n0 3 47\n50 6 44\n100 10 40\n150 19 31\n"
-	},		
-    {"id":51, "model_app_name":"weibull_bg_dose",
-	"dfile":"Weibull_bg_response\nBMDS_MODEL_RUN \nWeibull_bg_dose.(D) \nWeibull_bg_dose.OUT \n5 \n500 1.00E-08 1.00E-08 0 1 1 0 0\n0.1000 0 0.95\n-9999 -9999 -9999\n0\n-9999 -9999 -9999\nDose Effect NEGATIVE_RESPONSE\n0 0 100\n50 5 95\n100 30 70\n150 65 35\n200 90 10\n"
-	}		
+	{"id":43, "model_app_name":"weibull",
+	"dfile":"Quantal-Linear \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-Quantal-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 1 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	}/*,
+    {"id":44, "model_app_name":"weibull_bg_dose",
+	"dfile":"Weibull-BgDose \nBMDS_Model_Run \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-AcroleinInhalation.dax \nC:/USEPA/BMDS/BMDS2601/Dorman2008/1-2008-Acrolein_Inhalation-WeibullBgDose-10Pct-4d.out \n4 \n500 0.00000001 0.00000001 0 1 1 0 0 \n0.1 0 0.95 \n-9999 -9999 -9999 \n0 \n-9999 -9999 -9999 \nDose Incidence NEGATIVE_RESPONSE \n0 0 12 \n0.2 0 12 \n0.6 7 5 \n1.8 11 0 \n"
+	}	*/	
 ]
-}
+}		// end of var string
 	
-	
-	
+	seconds_elapse();
+	$.ajax({url: "http://52.24.231.219/Server-receiving.php", 		// get the BMDS Service Number
+		data: {data: JSON.stringify(submittion_str)},
+		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
+		contentType: "text/plain",
+		method: "POST",
+		// dataType: "application/json",	// The data type to receive. datatype : "application/json",
+		cache: false, // The browser not to store content
+ 		
 
+		success: function(data){
+			// clearTimeout(seconds_100);
+			// $("#show_content").html("Received data: <br>.." + data + ".. <br>..");
+			
+			obj = JSON.parse(data);
+			
+			
+			// $("#show_content").html('json conversion works. <br><br><br>' + data + '<br>' + 
+			//	'<br>BMDS_Service_Number = ' + obj.BMDS_Service_Number);
+			// alert('1. BMDS_Service_Number = ' + obj.BMDS_Service_Number);
+			// window.open("http://52.24.231.219/Server-receiving.php?bsn="+ obj.BMDS_Service_Number, 
+				//location=no, menubar=no, "BDMS_excution_window");
+			excution_window = window.open("http://52.24.231.219/BMDS_execution.php?bsn="+ 
+				obj.BMDS_Service_Number,  
+				"BDMS_excution_window", 
+				"location=no, menubar=yes, channelmode=0, width=1100, height=550");
+			
+			excution_window.blur(); 
+			
+			setTimeout(function doSomethingLater() { 			// delay just once.
+				// alert("BMDS Service Number: " + obj.BMDS_Service_Number);
+				self.focus();
+				}, 3000);
+			
 
-	alert("Before post");
+		}
+	})		// end of $.ajax to Server-receiving.php
+	
+	
+	setTimeout(function doSomethingLater() { 		// delay just once too.
+		check_results();
+		}, 3000);
+	 // ;
+	
+	
+	/*
 	seconds_elapse();
 	// $.ajax({url: "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php", 
-	// $.ajax({url: "http://52.24.231.219/Find_results.php", 
 	$.ajax({url: "http://52.24.231.219/Server-receiving.php", 
 		data: {data: JSON.stringify(submittion_str)},
 		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
@@ -405,8 +415,8 @@ var submittion_str = {
 		// dataType: "application/json",	// The data type to receive. datatype : "application/json",
 		cache: false, // The browser not to store content
  		
+
 		success: function(data){
-			alert("posted");
 			clearTimeout(seconds_100);
 			$("#show_content").html("Received data: <br>.." + data + ".. <br>..");
 			
@@ -435,8 +445,8 @@ var submittion_str = {
 			$("#BMDS_run_diverge").hide();
 			$("#selection_tag").show();
 			
-    	}
-	});
+    	}		
+	});		*/		// end of post
 })
 
 }
@@ -445,9 +455,59 @@ var submittion_str = {
 </script>
 
 
+
+
 <script type="text/javascript">
 
+function check_results(){
+	$.ajax({url: "http://52.24.231.219/Server-report.php", 
+		data: obj.BMDS_Service_Number,
+		contentType: "text/plain",
+		method: "POST",
+		cache: false, // The browser not to store content
+ 		
+		success: function(data){
+			// $("#show_content").html("Received data 2: <br>2.." + data + ".. <br>..");
 
+			if (data.substring(0, 3) == "Not"){
+				check_results_again();
+				return "";		// get out of the function check_reslts()
+				}
+			
+			obj = JSON.parse(data);
+			excution_window.close();  
+			clearTimeout(seconds_100);
+			
+			
+			$("#show_content").html('json conversion works. <br><br>' + '<br>BMDS_Service_Number = ' + 
+				obj.BMDS_Service_Number);
+
+			$("#show_content").html('Great. BMDS_Service_Number = ' + 
+				obj.BMDS_Service_Number + '. Values extracted from returned jSon string. ' +
+				"<br>Results for one of the models: <br><br>" + 
+				"ID: " + obj.BMDS_Results[Model_number].id.toString() +"<br>" +
+				"Model name: " + obj.BMDS_Results[Model_number].model_app_name.toString() +"<br>" +
+				"<br>Resulting .OUT file: <pre>" + obj.BMDS_Results[Model_number].OUT_file_str.toString() +"</pre>" +
+				"<br>EMF file link: <a href='http://" + obj.BMDS_Results[Model_number].emf_link.toString() +
+				"'>" + obj.BMDS_Results[Model_number].emf_link.toString() + "</a><br>" +
+				"<br>Base64 decoded .emf file: <br>" + 
+				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
+				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
+				"");		
+			$("#show_content").css("background-color","#C4E1FF");
+			$("#BMDS_run_diverge").hide();
+			$("#selection_tag").show();
+			
+		}
+	})		// end of $.ajax to Server-report.php
+
+}	// end of function check_results()
+
+function check_results_again(){
+	delay_3_seconds = setTimeout("check_results()",3000);			// delay once only.
+	}
+
+// ################################## Showing Elapse Time 
 
 var i = 0;
 var seconds_100;
@@ -458,6 +518,7 @@ function seconds_elapse(){
 	i = i + 1;
 	if (i > 100){
 		$("#show_content").html("Error, please try to reload, or report the problem.");
+		excution_window.close();
 	}
 	seconds_100 = setTimeout("display_time()",1000);
 }
@@ -466,20 +527,6 @@ function display_time() {
 	seconds_elapse()
 }
 
+
 $("#reload_button").click(function(e){location.reload(); })
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
