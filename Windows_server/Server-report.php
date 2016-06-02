@@ -28,7 +28,7 @@ header("Access-Control-Allow-Origin: *");
 $BMDS_Service_Number = file_get_contents('php://input'); 
 // echo '$BMDS_Service_Number: '. $BMDS_Service_Number. '<br>';
 
-$storage_file = $BMDS_Service_Number. "_rsults.txt";
+$storage_file = $BMDS_Service_Number. "_results.txt";
 $storage_file = '.\\Temp_BMDS_files\\'.$storage_file;
 $storage_file_size = filesize($storage_file);
 
@@ -37,8 +37,9 @@ if ($storage_file_size > 2000) {
 	echo $results;
 
 }else {
-    echo "Not ready. ";
-  	echo $storage_file . ': ' . $storage_file_size . ' bytes';
+    // echo "Not ready. ";
+  	// echo $storage_file . ': ' . $storage_file_size . ' bytes';
+	echo "{\"BMDS_Service_Number\": \"". $BMDS_Service_Number. "\", \"BMDS_Results\":[] \"status\": \"incomplete\"}";
 }
 
 

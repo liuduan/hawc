@@ -229,13 +229,13 @@ sort($files);
 
 // delete the files after 24 hours.
 for ($i = 0; $i < count($files); ++$i) {
-	if ($files[$i] != "." AND  $files[$i] != ".."){
-		if ((time() - filemtime('.\\Temp_BMDS_files\\'.$files[$i])) > 86400){		// more than 24 hours old
+	if ($files[$i] != "." AND  $files[$i] != ".." AND $files[$i] != "index.html"){
+		if ((time() - filemtime('.\\Temp_BMDS_files\\'.$files[$i])) > 86400){		
+			// more than 24 hours old
 			unlink('.\\Temp_BMDS_files\\'.$files[$i]);
-			}
-		}    
+		}
+	}    
 }
-
 
 //
 $input_data = '.\\Temp_BMDS_files\\'. $_GET["bsn"]. "_data.txt";
@@ -247,16 +247,10 @@ $from_input = file_get_contents($input_data);
 
 // Get storage number
 
-$storage_file = $_GET["bsn"]. "_rsults.txt";
-
-// Transfer post string into jSon string, change %22, %3A signs.
-$from_input = PostString_to_jsonString($from_input);
-// echo '$from_input = '. $from_input;
-
+$storage_file = $_GET["bsn"]. "_results.txt";
 
 // Transfer json string into PHP object.
 $obj_from_input = json_decode($from_input, true, $depth = 512);		// true for associated array.
-// print_r($obj_from_input);
 
 $BMDS_version = $obj_from_input['options']['bmds_version'];
 // print_r($obj_from_input);
@@ -326,7 +320,7 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 	$output_ar[$k]["model_app_name"] = $v["model_app_name"];
 	$output_ar[$k]['OUT_file_str'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
 
-	if ( $obj_from_input['options']['emf_YN'] == 'True' ){
+	if ( $obj_from_input['options']['emf_YN'] == true ){
 		
 		$the_002_file = substr($output_file_name, 0, -4). '.002';
 		
@@ -362,8 +356,8 @@ $output_json = json_encode($output_ar);
 
 // echo '<br>$storage_file = '. $storage_file. '<br>';
 
-$storage_str = "{\"". $storage_file. "\": ". $output_json. "}"; 
-$storage_str = "{\"BMDS_Service_Number\": \"". $_GET["bsn"]. "\", \"BMDS_Results\": ". $output_json. "}"; 
+$storage_str = "{\"BMDS_Service_Number\": \"". $_GET["bsn"]. "\", \"status\": \"complete\", ";
+$storage_str .= "\"BMDS_Results\": ". $output_json. "}"; 
 // $storage_str = $output_json; 
 		# Save file to disk
 $storage_file = '.\\Temp_BMDS_files\\'.$storage_file;
@@ -375,22 +369,6 @@ echo '<br> BMDS Job Finished.';
 
 
 // =====================================================================================================
-
-function PostString_to_jsonString($from_input) {
-	// This function take $from_input = file_get_contents('php://input'); 
-	// Replaces the characters and maks the string recognizible by json_decode().
-    $from_input = str_replace("%22", '"', $from_input);
-	$from_input = str_replace("%3A", ':', $from_input);
-	$from_input = str_replace("%2C", ',', $from_input);
-	$from_input = str_replace("%7D", '}', $from_input);
-	$from_input = str_replace("%7B", '{', $from_input);
-	$from_input = str_replace("%5C", '\\', $from_input);
-	$from_input = str_replace("%5D", ']', $from_input);
-	$from_input = str_replace("%5B", '[', $from_input);
-	$from_input = str_replace("+", ' ', $from_input);
-	$from_input = substr($from_input, 5, (strlen($from_input)-5));
-	return $from_input;
-}
 
 function Serial_number() {
 	// This function takes a serial number from ./Serial.txt; 

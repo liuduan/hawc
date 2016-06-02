@@ -107,6 +107,12 @@ color:	#842B00;
 font-weight:bold;
 }
 
+smaller_font{
+	font:normal 13pt Arial;
+	color:	#030200;
+	font-weight:bold;
+}
+
 pre {
     white-space: pre-wrap;       /* CSS 3 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
@@ -244,9 +250,10 @@ pre {
 <script type='text/javascript'>
 
 var bmds_version = "BMDS2601";
-var emf_YN = "True";
+var emf_YN = true;
 var Model_number = 0;
 var bg_color = "light_green";
+var show_Number;
 
 $('#Model_number').on('change', function() {
 	Model_number = Number($('#Model_number').val());
@@ -254,7 +261,7 @@ $('#Model_number').on('change', function() {
    	// alert('Model_number = ' + Model_number); 
 	$("#show_content").css("background-color","#C4E1E1");
 	$("#show_content").html('Great. Values extracted from returned jSon string. ' +
-				// "<br> This should work: "+ Object.getOwnPropertyNames(obj.models[0].id_content(0)) ); //+
+				' MDS_Service_Number = ' + obj.BMDS_Service_Number +  
 				"<br>Results for one of the models: <br><br>" + 
 				// Model_number +
 				"ID: " + obj.BMDS_Results[Model_number].id.toString() +"<br>" +
@@ -283,7 +290,7 @@ $('#Model_number').on('change', function() {
         	break;
 		}
 	// alert('Model_number. = ' + Model_number); 
-});
+});			// end of on change.
 
 $('#emf_selection').on('change', function() {
 	emf_YN = $('#emf_selection').val();
@@ -291,10 +298,9 @@ $('#emf_selection').on('change', function() {
 });
 
 
-
 $(document).ready(function(){
 	
-$("#selection_tag").hide();	
+	$("#selection_tag").hide();	
 	
 $("#BMDS_run_diverge").click(function(){
 	// alert("emf_YN: " + emf_YN + '; bmds_version = ' + bmds_version);
@@ -361,8 +367,7 @@ var submittion_str = {
 	
 	seconds_elapse();
 	$.ajax({url: "http://52.24.231.219/Server-receiving.php", 		// get the BMDS Service Number
-		data: {data: JSON.stringify(submittion_str)},
-		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
+		data: JSON.stringify(submittion_str),
 		contentType: "text/plain",
 		method: "POST",
 		// dataType: "application/json",	// The data type to receive. datatype : "application/json",
@@ -373,8 +378,9 @@ var submittion_str = {
 			// clearTimeout(seconds_100);
 			// $("#show_content").html("Received data: <br>.." + data + ".. <br>..");
 			
-			obj = JSON.parse(data);
-			
+			serial_obj = JSON.parse(data);
+			show_Number = serial_obj.BMDS_Service_Number;
+			// alert("show_Number = " + show_Number);
 			
 			// $("#show_content").html('json conversion works. <br><br><br>' + data + '<br>' + 
 			//	'<br>BMDS_Service_Number = ' + obj.BMDS_Service_Number);
@@ -382,7 +388,7 @@ var submittion_str = {
 			// window.open("http://52.24.231.219/Server-receiving.php?bsn="+ obj.BMDS_Service_Number, 
 				//location=no, menubar=no, "BDMS_excution_window");
 			excution_window = window.open("http://52.24.231.219/BMDS_execution.php?bsn="+ 
-				obj.BMDS_Service_Number,  
+				serial_obj.BMDS_Service_Number,  
 				"BDMS_excution_window", 
 				"location=no, menubar=yes, channelmode=0, width=1100, height=550");
 			
@@ -392,67 +398,26 @@ var submittion_str = {
 				// alert("BMDS Service Number: " + obj.BMDS_Service_Number);
 				self.focus();
 				}, 3000);
-			
-
-		}
+		}	// end of success{}
 	})		// end of $.ajax to Server-receiving.php
 	
 	
 	setTimeout(function doSomethingLater() { 		// delay just once too.
 		check_results();
-		}, 3000);
-	 // ;
-	
-	
-	/*
-	seconds_elapse();
-	// $.ajax({url: "http://ec2-52-24-231-219.us-west-2.compute.amazonaws.com/BMDS_execution.php", 
-	$.ajax({url: "http://52.24.231.219/Server-receiving.php", 
-		data: {data: JSON.stringify(submittion_str)},
-		// data: 'application/x-www-form-urlencoded; charset=UTF-8', //submittion, 		// Data to send.
-		contentType: "text/plain",
-		method: "POST",
-		// dataType: "application/json",	// The data type to receive. datatype : "application/json",
-		cache: false, // The browser not to store content
- 		
+		}, 3000);		// end of setTimeout
 
-		success: function(data){
-			clearTimeout(seconds_100);
-			$("#show_content").html("Received data: <br>.." + data + ".. <br>..");
-			
-			obj = JSON.parse(data);
-			
-			$("#show_content").html('json conversion works. <br><br><br>' + data + '<br>' + 
-				obj[Model_number].model_app_name);
-			$("#show_content").html('json conversion works 2. <br><br><br>' + data + '<br>"<pre>"' + 
-				obj[Model_number].OUT_file_str);
-			// var id_content_arr = obj.models[0].id_content.
-			
-			// $("#show_content").html('Great, obj.models.toString(): <br>' + id_content_arr);
-			$("#show_content").html('Great. Values extracted from returned jSon string. ' +
-				// "<br> This should work: "+ Object.getOwnPropertyNames(obj.models[0].id_content(0)) ); //+
-				"<br>Results for one of the models: <br><br>" + 
-				"ID: " + obj[Model_number].id.toString() +"<br>" +
-				"Model name: " + obj[Model_number].model_app_name.toString() +"<br>" +
-				"<br>Resulting .OUT file: <pre>" + obj[Model_number].OUT_file_str.toString() +"</pre>" +
-				"<br>EMF file link: <a href='http://" + obj[Model_number].emf_link.toString() +
-				"'>" + obj[Model_number].emf_link.toString() + "</a><br>" +
-				"<br>Base64 decoded .emf file: <br>" + 
-				obj[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
-				obj[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
-				"");		
-			$("#show_content").css("background-color","#C4E1FF");
-			$("#BMDS_run_diverge").hide();
-			$("#selection_tag").show();
-			
-    	}		
-	});		*/		// end of post
-})
+})				// end of post
 
-}
-)
+})			// end of on-click
 
 </script>
+
+
+
+
+
+
+
 
 
 
@@ -460,21 +425,24 @@ var submittion_str = {
 <script type="text/javascript">
 
 function check_results(){
+	
 	$.ajax({url: "http://52.24.231.219/Server-report.php", 
-		data: obj.BMDS_Service_Number,
+		data: serial_obj.BMDS_Service_Number,
 		contentType: "text/plain",
 		method: "POST",
 		cache: false, // The browser not to store content
  		
 		success: function(data){
+			// alert("data.substring(78, 88) == " + data.substring(78, 88));
 			// $("#show_content").html("Received data 2: <br>2.." + data + ".. <br>..");
 
-			if (data.substring(0, 3) == "Not"){
+			if (data.substring(78, 88) == "incomplete"){
 				check_results_again();
 				return "";		// get out of the function check_reslts()
 				}
-			
+			// alert("not decoded: " + data);
 			obj = JSON.parse(data);
+			// alert("decoded");
 			excution_window.close();  
 			clearTimeout(seconds_100);
 			
@@ -513,8 +481,13 @@ var i = 0;
 var seconds_100;
 
 function seconds_elapse(){
-	$("#show_content").html("<br><center><Deep_maroon>This process takes about 15 seconds. <br><br>" + 
-		"Time: </Deep_maroon><font size='6' color='blue' face='verdana'><b> &nbsp&nbsp" + i + "&nbsp&nbsp</font></b>   <Deep_maroon>Seconds.</Deep_maroon></center>");
+	$("#show_content").html(
+	"<br><center><Deep_maroon>This process takes about 15 seconds. <br><br>" + 
+	"Time: </Deep_maroon><font size='6' color='blue' face='verdana'><b> &nbsp&nbsp" + i + 
+	"&nbsp&nbsp	</font></b>   <Deep_maroon>Seconds." +
+	"<br><br>The BMDS Service Number is: <smaller_font>" + 
+	show_Number + "</smaller_font><br><br></center></Deep_maroon>");
+		
 	i = i + 1;
 	if (i > 100){
 		$("#show_content").html("Error, please try to reload, or report the problem.");
