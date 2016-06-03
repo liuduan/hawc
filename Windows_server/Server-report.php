@@ -26,6 +26,8 @@ header("Access-Control-Allow-Origin: *");
 */
 
 $BMDS_Service_Number = file_get_contents('php://input'); 
+$BMDS_Service_Number = $_GET["BMDS_Service_Number"];
+// echo '$_GET["BMDS_Service_Number"] = '. $_GET["BMDS_Service_Number"];
 // echo '$BMDS_Service_Number: '. $BMDS_Service_Number. '<br>';
 
 $storage_file = $BMDS_Service_Number. "_results.txt";
