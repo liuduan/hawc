@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 /*	The purpose of this file is to run BMDS in a Windows server. The .(D) files are received from the .post() function on a client web page.
 	The client side PC testing file is ./Local_PC_testing_files/BMDS-Server-Tester.html.
-     This line in remote PHP file is required to allow post access in Amazon Web Services:
+     This line in server PHP file is required to allow post access in Amazon Web Services:
 header("Access-Control-Allow-Origin: *");
 	The json receiving is working with plain text transfer. After that, signs like %22%2C are replaced by (",), So it will fit into json_decode() in PHP. 
 
@@ -268,9 +268,9 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 	// echo '<br><br>$dfile_str: '. $dfile_str;
 
 
-	$before = strstr($dfile_str,"\n", true);
+	$before = strstr($dfile_str,"\n", true);	// first part of the string before "\n"
 
-	$after = strstr($dfile_str,"\n", false);
+	$after = strstr($dfile_str,"\n", false);	// the string after "\n"
 		// echo '### $before: '. $before;
 		// echo '### $after: '. $after;
 
@@ -319,6 +319,11 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 	$output_ar[$k]['id'] = $v["id"];
 	$output_ar[$k]["model_app_name"] = $v["model_app_name"];
 	$output_ar[$k]['OUT_file_str'] = file_get_contents('.\\Temp_BMDS_files\\'.$output_file_name);
+	
+	// Checking modelExecuted status.
+	if (strlen ($output_ar[$k]['OUT_file_str']) < 10){
+		$output_ar[$k]['modelExcuted'] = false;
+	}else{$output_ar[$k]['modelExcuted'] = true;}
 
 	if ( $obj_from_input['options']['emf_YN'] == true ){
 		
@@ -331,6 +336,11 @@ foreach ($obj_from_input['runs'] as $k => $v) {			// cycle the content of [0] an
 		$output_ar[$k]['emf_link'] = 
 			'52.24.231.219/Temp_BMDS_files/'. substr($the_002_file, 0, -4). '_emf.EMF';
 			
+		// Checking plotGenerated status.
+		if (strlen ($output_ar[$k]['base64_emf_str']) < 100){
+			$output_ar[$k]['plotGenerated'] = false;
+		}else{$output_ar[$k]['plotGenerated'] = true;
+			}
 					
 	} else {
     	$output_ar[$k]['base64_emf_str'] = "";

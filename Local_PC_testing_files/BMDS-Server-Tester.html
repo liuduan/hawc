@@ -205,28 +205,28 @@ pre {
 	The output object look like this:
 {"BMDS_Service_Number": "xxx", "Results": 
 [
-    {"id":31, "model_app_name": "logist",
+    {"id":31, "model_app_name": "logist", "modelExecuted": true, "plotGenerated": true, 
     	"OUT_file_str":"LogLogistic ..... ",
         "base64_emf_str": " ...... "}  // corrected.
     }
         
-    {"id":32, "model_app_name": "exponential_M2",
+    {"id":32, "model_app_name": "exponential_M2", "modelExecuted": true, "plotGenerated": false, 
         "OUT_file_str": "exponential ..... ",
         "base64_emf_str": "..... "               
     }
-    {"id":33, "model_app_name": "exponential_M3",
+    {"id":33, "model_app_name": "exponential_M3", "modelExecuted": true, "plotGenerated": true, 
         "OUT_file_str": "exponential ..... ",
         "base64_emf_str": "..... "               
     }
-    {"id":32, "model_app_name": "exponential_M4",
+    {"id":32, "model_app_name": "exponential_M4", "modelExecuted": true, "plotGenerated": true, 
         "OUT_file_str": "exponential ..... ",
         "base64_emf_str": "..... "               
     }
-    {"id":32, "model_app_name": "exponential_M5",
+    {"id":32, "model_app_name": "exponential_M5", "modelExecuted": true, "plotGenerated": false, 
         "OUT_file_str": "exponential ..... ",
         "base64_emf_str": "..... "               
     }
-    {"id":32, "model_app_name": "gamma",
+    {"id":32, "model_app_name": "gamma", "modelExecuted": true, "plotGenerated": true, 
         "OUT_file_str": "exponential ..... ",
         "base64_emf_str": "..... "               
     }
@@ -259,19 +259,7 @@ $('#Model_number').on('change', function() {
 	// bmds_version = $('#BMDS_version').val();
    	// alert('Model_number = ' + Model_number); 
 	$("#show_content").css("background-color","#C4E1E1");
-	$("#show_content").html('Great. Values extracted from returned jSon string. ' +
-				' MDS_Service_Number = ' + obj.BMDS_Service_Number +  
-				"<br>Results for one of the models: <br><br>" + 
-				// Model_number +
-				"ID: " + obj.BMDS_Results[Model_number].id.toString() +"<br>" +
-				"Model name: " + obj.BMDS_Results[Model_number].model_app_name.toString() +"<br>" +
-				"<br>Resulting .OUT file: <pre>" + obj.BMDS_Results[Model_number].OUT_file_str.toString() +"</pre>" +
-				"<br>EMF file link: <a href='http://" + obj.BMDS_Results[Model_number].emf_link.toString() +
-				"'>" + obj.BMDS_Results[Model_number].emf_link.toString() + "</a><br>" +
-				"<br>Base64 decoded .emf file: <br>" + 
-				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
-				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
-				"");		
+	show_results();		
 	switch (bg_color) {
     	case "light_blue":
         	$("#show_content").css("background-color","#C4E1FF");
@@ -288,6 +276,7 @@ $('#Model_number').on('change', function() {
 			bg_color = "light_blue";
         	break;
 		}
+	
 	// alert('Model_number. = ' + Model_number); 
 });			// end of on change.
 
@@ -433,14 +422,17 @@ function check_results(){
 		cache: false, // The browser not to store content
  		
 		success: function(data){
-			// alert("data: " + data);
+			// alert("Got data substring: " + data.substring(data.length-12,  data.length-2));
 			// $("#show_content").html("Received data 2: <br>2.." + data + ".. <br>..");
 
-			if (data.substring(78, 88) == "incomplete"){
+			if (data.substring(data.length-12,  data.length-2) == "incomplete"){
+				// alert("data: " + data.substring(data.length-12,  data.length-2));
 				check_results_again();
 				return "";		// get out of the function check_reslts()
 				}
-			// alert("not decoded: " + data);
+			// alert("Not decoded: " + data.substring(data.length-12,  data.length-2));
+			// $("#show_content").html(data);
+			
 			obj = JSON.parse(data);
 			// alert("decoded");
 			excution_window.close();  
@@ -448,20 +440,10 @@ function check_results(){
 			
 			
 			$("#show_content").html('json conversion works. <br><br>' + '<br>BMDS_Service_Number = ' + 
-				obj.BMDS_Service_Number);
+				obj.BMDS_Service_Number +
+				'<br><br>'+ obj.BMDS_Results[Model_number].toString());
 
-			$("#show_content").html('Great. BMDS_Service_Number = ' + 
-				obj.BMDS_Service_Number + '. Values extracted from returned jSon string. ' +
-				"<br>Results for one of the models: <br><br>" + 
-				"ID: " + obj.BMDS_Results[Model_number].id.toString() +"<br>" +
-				"Model name: " + obj.BMDS_Results[Model_number].model_app_name.toString() +"<br>" +
-				"<br>Resulting .OUT file: <pre>" + obj.BMDS_Results[Model_number].OUT_file_str.toString() +"</pre>" +
-				"<br>EMF file link: <a href='http://" + obj.BMDS_Results[Model_number].emf_link.toString() +
-				"'>" + obj.BMDS_Results[Model_number].emf_link.toString() + "</a><br>" +
-				"<br>Base64 decoded .emf file: <br>" + 
-				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
-				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
-				"");		
+			show_results();				
 			$("#show_content").css("background-color","#C4E1FF");
 			$("#BMDS_run_diverge").hide();
 			$("#selection_tag").show();
@@ -500,6 +482,26 @@ function display_time() {
 	seconds_elapse()
 }
 
+function show_results() {
+	$("#show_content").html('Great. BMDS_Service_Number = ' + 
+				obj.BMDS_Service_Number + '. Values extracted from returned jSon string. ' +
+				"<br>Results for one of the models: <br><br>" + 
+				"ID: &nbsp; &nbsp; &nbsp; " + obj.BMDS_Results[Model_number].id.toString() +"<br>" +
+				"Model name: &nbsp; &nbsp; " + 
+					obj.BMDS_Results[Model_number].model_app_name.toString() +"<br>" +
+				
+				"modelExecuted: " + obj.BMDS_Results[Model_number].modelExcuted.toString() +"<br>" +
+				"plotGenerated: " + obj.BMDS_Results[Model_number].plotGenerated.toString() +"<br>" +
+				
+				"<br>Resulting .OUT file: <pre>" + 
+					obj.BMDS_Results[Model_number].OUT_file_str.toString() +"</pre>" +
+				"<br>EMF file link: <a href='http://" + obj.BMDS_Results[Model_number].emf_link.toString() +
+				"'>" + obj.BMDS_Results[Model_number].emf_link.toString() + "</a><br>" +
+				"<br>Base64 decoded .emf file: <br>" + 
+				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(1, 85) + "<br>" +
+				obj.BMDS_Results[Model_number].base64_emf_str.toString().substring(81, 160) + "......<br>" +
+				"");		
+}
 
 $("#reload_button").click(function(e){location.reload(); })
 </script>
