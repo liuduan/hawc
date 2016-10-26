@@ -41,7 +41,7 @@ if ($storage_file_size > 2000) {
 }else {
     // echo "Not ready. ";
   	// echo $storage_file . ': ' . $storage_file_size . ' bytes';
-	echo "{\"BMDS_Service_Number\": \"". $BMDS_Service_Number. "\", \"BMDS_Results\":[] \"status\": \"incomplete\"}";
+	echo "{\"BMDS_Service_Number\": \"". $BMDS_Service_Number. "\", \"BMDS_Results\":[], \"status\": \"incomplete\"}";
 }
 
 
